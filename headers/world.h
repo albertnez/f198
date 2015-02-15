@@ -37,6 +37,8 @@ private:
 
   // Layers enum
   enum Layer {
+    ObjectLayer,
+    ShipLayer,
     LayerCount,
   };
 

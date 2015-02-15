@@ -8,6 +8,9 @@ namespace Category {
 enum Type {
   None = 0,
   Player = 1 << 0,
+  ObjectLayer = 1 << 1,
+  AllyBullet = 1 << 2,
+  EnemyBullet = 1 << 3
 };
 
 }

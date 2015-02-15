@@ -1,11 +1,11 @@
 #include "world.h"
+#include "ship.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <algorithm>
 #include <cmath>
 #include <limits>
-
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
     : m_target(outputTarget),
@@ -85,11 +85,18 @@ void World::handle_collisions() {
 void World::build_scene() {
   // Initialize the different layers
   for (std::size_t i = 0; i < LayerCount; ++i) {
-    SceneNode::Ptr layer(new SceneNode(Category::None));
+    Category::Type category = Category::None;
+    if (i == Layer::ObjectLayer) category = Category::ObjectLayer;
+    SceneNode::Ptr layer(new SceneNode(category));
     m_scene_layers[i] = layer.get();
     m_scene_graph.attach_child(std::move(layer));
   }
   // Initialize remaining scene
+	std::unique_ptr<Ship> player(new Ship(Ship::Player));
+  //m_target.draw(*player.get());
+  m_scene_layers[ShipLayer]->attach_child(std::move(player));
+  //m_target.draw(*m_scene_layers[ShipLayer]);
+  m_target.draw(m_scene_graph);
 }
 
 sf::FloatRect World::get_view_bounds() const {

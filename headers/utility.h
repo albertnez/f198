@@ -8,6 +8,7 @@
 
 
 namespace sf {
+  class RectangleShape;
   class Sprite;
   class Text;
 }
@@ -23,6 +24,7 @@ std::string to_string(const T& value);
 std::string to_string(sf::Keyboard::Key key);
 
 // Call setOrigin() with the center of the object
+void center_origin(sf::RectangleShape& rectangle);
 void center_origin(sf::Sprite& sprite);
 void center_origin(sf::Text& text);
 void center_origin(Animation& animation);

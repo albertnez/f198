@@ -1,5 +1,6 @@
 #include "utility.h"
 
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
@@ -127,6 +128,10 @@ std::string to_string(sf::Keyboard::Key key) {
     BOOK_KEYTOSTRING_CASE(Pause)
   }
   return "";
+}
+
+void center_origin(sf::RectangleShape& rectangle) {
+  rectangle.setOrigin(rectangle.getPosition() + rectangle.getSize()/2.0f);
 }
 
 void center_origin(sf::Sprite& sprite) {

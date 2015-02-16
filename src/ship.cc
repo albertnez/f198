@@ -38,7 +38,15 @@ unsigned int Ship::get_category() const {
 sf::FloatRect Ship::get_bounding_rect() const {
   sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
   sf::Vector2f size = Table[m_type].size;
-  return get_world_transform().transformRect(sf::FloatRect(pos-size/2.0f, size));
+  return get_world_transform().transformRect(sf::FloatRect(pos-size/2.f, size));
+}
+
+bool Ship::is_marked_for_removal() const {
+  return (m_type == Enemy && is_destroyed());
+}
+
+int Ship::get_damage() const {
+  return Table[m_type].damage;
 }
 
 float Ship::get_max_speed() const {
@@ -82,7 +90,8 @@ void Ship::draw_current(sf::RenderTarget& target,
 }
 
 void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
-  if (m_is_shooting && m_time_since_shot >= Table[m_type].fire_cooldown) {
+  if (m_is_shooting && m_time_since_shot >= Table[m_type].fire_cooldown &&
+      m_aim_dir != sf::Vector2f(0.0f, 0.0f)) {
     m_time_since_shot = sf::seconds(0.0f);
     commands.push(m_fire_command);
   }

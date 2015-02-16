@@ -12,6 +12,11 @@ class CommandQueue;
 
 class Player {
 public:
+  enum Status {
+    Alive,
+    Dead,
+  };
+
   enum Action {
     MoveLeft,
     MoveRight,
@@ -32,12 +37,16 @@ public:
   void assign_key(Action action, sf::Keyboard::Key key);
   sf::Keyboard::Key get_assigned_key(Action action) const;
 
+  Player::Status get_status() const;
+  void set_status(Status status);
+
 private:
   void initialize_actions();
   static bool is_realtime_action(Action action);
 
   std::map<sf::Keyboard::Key, Action> m_key_binding;
   std::map<Action, Command> m_action_binding;
+  Status m_status;
 };
 
 #endif // PLAYER_H

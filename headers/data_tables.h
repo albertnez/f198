@@ -12,6 +12,7 @@
 // Contains all static initial data of objects
 struct ShipData {
   int hitpoints;
+  int damage;
   float speed;
   float acceleration;
   float friction;

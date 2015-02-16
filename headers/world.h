@@ -5,6 +5,7 @@
 #include "resource_identifiers.h"
 #include "scene_node.h"
 #include "sprite_node.h"
+#include "ship.h"
 #include "command_queue.h"
 #include "command.h"
 
@@ -26,6 +27,7 @@ public:
   explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
   void update(sf::Time dt);
   void draw();
+  bool is_player_alive() const;
   
   CommandQueue& get_command_queue();
 
@@ -33,9 +35,10 @@ private:
   void load_textures();
   void handle_collisions();
   void build_scene();
+  sf::FloatRect get_view_bounds() const;
   sf::FloatRect get_bounding_rect() const;
   void remove_outside_entities();
-  sf::FloatRect get_view_bounds() const;
+  void guide_enemies();
 
   // Layers enum
   enum Layer {
@@ -51,6 +54,7 @@ private:
 
   SceneNode m_scene_graph;
   std::array<SceneNode*, LayerCount>  m_scene_layers;
+  Ship* m_player;
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
 };

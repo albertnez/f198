@@ -15,7 +15,10 @@ struct ShipMover {
   sf::Vector2f velocity;
 };
 
-Player::Player() {
+Player::Player() 
+    : m_key_binding(),
+      m_action_binding(),
+      m_status(Status::Alive) {
   // Set initial key bindings
   m_key_binding[sf::Keyboard::A] = MoveLeft;
   m_key_binding[sf::Keyboard::D] = MoveRight;
@@ -74,6 +77,14 @@ sf::Keyboard::Key Player::get_assigned_key(Action action) const {
   }
 
   return sf::Keyboard::Unknown;
+}
+
+Player::Status Player::get_status() const {
+  return m_status;
+}
+
+void Player::set_status(Status status) {
+  m_status = status;
 }
 
 void Player::initialize_actions() {

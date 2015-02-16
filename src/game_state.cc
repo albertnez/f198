@@ -14,6 +14,9 @@ void GameState::draw() {
 bool GameState::update(sf::Time dt) {
   m_world.update(dt);
 
+  if (!m_world.is_player_alive())
+    request_stack_pop();
+
   CommandQueue& commands = m_world.get_command_queue();
   m_player.handle_realtime_input(commands);
 

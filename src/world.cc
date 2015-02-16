@@ -1,6 +1,6 @@
 #include "world.h"
-#include "ship.h"
 #include "bullet.h"
+#include "utility.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -15,6 +15,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_fonts(fonts),
       m_scene_graph(),
       m_scene_layers(),
+      m_player(nullptr),
+      m_command_queue(),
       m_size(800.0f, 600.0f) {
 
   load_textures();
@@ -22,15 +24,18 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
 }
 
 void World::update(sf::Time dt) {
+  // Remove objects outside of bounds
+  remove_outside_entities();
+
   // Forward commands to scene graph
   while (!m_command_queue.empty())
     m_scene_graph.on_command(m_command_queue.pop(), dt);
 
+  // Guide enemies towards player
+  guide_enemies();
+
   // Handle collisions
   handle_collisions();
-
-  // Remove objects outside of bounds
-  remove_outside_entities();
 
   // Removed dead entities
   m_scene_graph.remove_wrecks();
@@ -42,6 +47,10 @@ void World::update(sf::Time dt) {
 void World::draw() {
   m_target.setView(m_world_view);
   m_target.draw(m_scene_graph);
+}
+
+bool World::is_player_alive() const {
+  return !m_player->is_destroyed();
 }
 
 CommandQueue& World::get_command_queue() {
@@ -76,12 +85,20 @@ void World::handle_collisions() {
   m_scene_graph.check_scene_collision(m_scene_graph, collision_pairs);
 
   for (SceneNode::Pair pair : collision_pairs) {
-    if (matches_categories(pair, Category::Enemy, Category::AllyBullet)) {
-      auto& enemy = static_cast<Ship&>(*pair.first);
+    if (matches_categories(pair, Category::Enemy, Category::AllyBullet) ||
+        matches_categories(pair, Category::Player, Category::EnemyBullet)) {
+      auto& ship = static_cast<Ship&>(*pair.first);
       auto& bullet = static_cast<Bullet&>(*pair.second);
 
-      enemy.damage(bullet.get_damage());
+      ship.damage(bullet.get_damage());
       bullet.destroy();
+    }
+    else if (matches_categories(pair, Category::Enemy, Category::Player)) {
+      auto& enemy = static_cast<Ship&>(*pair.first);
+      auto& player = static_cast<Ship&>(*pair.second);
+
+      player.damage(enemy.get_damage());
+      enemy.destroy();
     }
   }
 }
@@ -97,12 +114,15 @@ void World::build_scene() {
   }
   // Initialize remaining scene
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
+  m_player = player.get();
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
 
   // Add one enemy
-  std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
-  enemy->setPosition(20.0f, 20.0f);
-  m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
+  for (int i = 0; i < 20; ++i) {
+    std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
+    enemy->setPosition(20.0f + 40.0f*i, 20.0f);
+    m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
+  }
 }
 
 sf::FloatRect World::get_view_bounds() const {
@@ -124,4 +144,18 @@ void World::remove_outside_entities() {
 	});
 
 	m_command_queue.push(command);
+}
+
+void World::guide_enemies() {
+  Command guide_command;
+  guide_command.category = Category::Enemy;
+  guide_command.action = derived_action<Ship>([this] (Ship& enemy, sf::Time) {
+
+    sf::Vector2f dir = unit_vector(m_player->get_world_position() - 
+                                   enemy.get_world_position());
+    sf::Vector2f velocity = dir * enemy.get_max_speed();
+
+    enemy.set_velocity(velocity);
+  });
+  m_command_queue.push(guide_command);
 }

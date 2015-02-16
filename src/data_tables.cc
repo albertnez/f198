@@ -16,8 +16,8 @@ std::vector<ShipData> initialize_ship_data() {
 
   data[Ship::Enemy].hitpoints = 2;
   data[Ship::Enemy].damage = 100.0f;
-  data[Ship::Enemy].speed = 40.0f;
-  data[Ship::Enemy].fire_cooldown = sf::seconds(0.5f);
+  data[Ship::Enemy].speed = 80.0f;
+  data[Ship::Enemy].fire_cooldown = sf::seconds(2.0f);
   data[Ship::Enemy].spawn_position = sf::Vector2f(800.0f, 200.0f);
   data[Ship::Enemy].size = sf::Vector2f(20.0f, 20.0f);
   data[Ship::Enemy].color = sf::Color::Red;
@@ -29,8 +29,8 @@ std::vector<BulletData> initialize_bullet_data() {
   std::vector<BulletData> data(Bullet::TypeCount);
 
   int damage = 1;
-  float speed = 800.0f;
-  sf::Vector2f size(3.0f, 3.0f);
+  float speed = 700.0f;
+  sf::Vector2f size(4.0f, 4.0f);
 
   data[Bullet::Ally].damage = damage;
   data[Bullet::Ally].speed = speed;
@@ -38,7 +38,7 @@ std::vector<BulletData> initialize_bullet_data() {
   data[Bullet::Ally].color = sf::Color::White;
 
   data[Bullet::Enemy].damage = damage;
-  data[Bullet::Enemy].speed = speed;
+  data[Bullet::Enemy].speed = 300.0f;
   data[Bullet::Enemy].size = size;
   data[Bullet::Enemy].color = sf::Color::Red;
 

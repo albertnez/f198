@@ -156,6 +156,7 @@ void World::guide_enemies() {
     sf::Vector2f velocity = dir * enemy.get_max_speed();
 
     enemy.set_velocity(velocity);
+    enemy.aim(dir);
   });
   m_command_queue.push(guide_command);
 }

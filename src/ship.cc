@@ -7,6 +7,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
+
 namespace {
 std::vector<ShipData> Table = initialize_ship_data();
 }
@@ -27,7 +28,17 @@ Ship::Ship(Type type)
 } 
 
 unsigned int Ship::get_category() const {
-  return Category::Player;
+  switch (m_type) {
+    case Player: return Category::Player;
+    case Enemy: return Category::Enemy;
+    default: return Category::None;
+  }
+}
+
+sf::FloatRect Ship::get_bounding_rect() const {
+  sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
+  sf::Vector2f size = Table[m_type].size;
+  return get_world_transform().transformRect(sf::FloatRect(pos-size/2.0f, size));
 }
 
 float Ship::get_max_speed() const {
@@ -72,13 +83,13 @@ void Ship::draw_current(sf::RenderTarget& target,
 
 void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
   if (m_is_shooting && m_time_since_shot >= Table[m_type].fire_cooldown) {
-    m_is_shooting = false;
     m_time_since_shot = sf::seconds(0.0f);
     commands.push(m_fire_command);
   }
-  // Update aim and shooting dir
+  // Reset shooting values
   m_shoot_dir = m_aim_dir;
   m_aim_dir = sf::Vector2f(0.0f, 0.0f);
+  m_is_shooting = false;
 }
 
 void Ship::create_bullet(SceneNode& scene_node) const {

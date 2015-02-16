@@ -6,15 +6,14 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include <iostream>
 
 namespace {
 std::vector<BulletData> Table = initialize_bullet_data();
 }
 
-Bullet::Bullet(Type type) :
-  Entity(1),
-  m_type(type) {
+Bullet::Bullet(Type type)
+    : Entity(1),
+      m_type(type) {
 }
 
 unsigned int Bullet::get_category() const {
@@ -23,6 +22,16 @@ unsigned int Bullet::get_category() const {
     case Enemy: return Category::EnemyBullet;
     default: return Category::None;
   }
+}
+
+sf::FloatRect Bullet::get_bounding_rect() const {
+  sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
+  sf::Vector2f size = Table[m_type].size;
+  return get_world_transform().transformRect(sf::FloatRect(pos-size/2.0f, size));
+}
+
+int Bullet::get_damage() const {
+  return Table[m_type].damage;
 }
 
 float Bullet::get_max_speed() const {

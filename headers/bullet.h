@@ -12,6 +12,8 @@ public:
   };
   Bullet(Type type);
   unsigned int get_category() const override;
+  sf::FloatRect get_bounding_rect() const override;
+  int get_damage() const;
   float get_max_speed() const;
 
 private:

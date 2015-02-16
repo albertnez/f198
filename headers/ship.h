@@ -14,6 +14,7 @@ public:
   };
   explicit Ship(Type type);
   unsigned int get_category() const override;
+  sf::FloatRect get_bounding_rect() const override;
   float get_max_speed() const;
   float get_acceleration() const;
   void aim(sf::Vector2f dir);

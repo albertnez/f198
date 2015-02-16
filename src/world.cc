@@ -1,5 +1,6 @@
 #include "world.h"
 #include "ship.h"
+#include "bullet.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -13,7 +14,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_textures(),
       m_fonts(fonts),
       m_scene_graph(),
-      m_scene_layers() {
+      m_scene_layers(),
+      m_size(800.0f, 600.0f) {
 
   load_textures();
   build_scene();
@@ -25,7 +27,10 @@ void World::update(sf::Time dt) {
     m_scene_graph.on_command(m_command_queue.pop(), dt);
 
   // Handle collisions
-  //handle_collisions();
+  handle_collisions();
+
+  // Remove objects outside of bounds
+  remove_outside_entities();
 
   // Removed dead entities
   m_scene_graph.remove_wrecks();
@@ -71,14 +76,13 @@ void World::handle_collisions() {
   m_scene_graph.check_scene_collision(m_scene_graph, collision_pairs);
 
   for (SceneNode::Pair pair : collision_pairs) {
-    /* Collision between Category1 and Category2
-    if (matches_categories(pair, Category::Category1, Category::Category2)) {
-      auto& lhs = static_cast<Type1&>(*pair.first);
-      auto& rhs = static_cast<Type2&>(*pair.second);
+    if (matches_categories(pair, Category::Enemy, Category::AllyBullet)) {
+      auto& enemy = static_cast<Ship&>(*pair.first);
+      auto& bullet = static_cast<Bullet&>(*pair.second);
 
-      // Handle collision
+      enemy.damage(bullet.get_damage());
+      bullet.destroy();
     }
-    */
   }
 }
 
@@ -93,13 +97,31 @@ void World::build_scene() {
   }
   // Initialize remaining scene
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
-  //m_target.draw(*player.get());
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
-  //m_target.draw(*m_scene_layers[ShipLayer]);
-  m_target.draw(m_scene_graph);
+
+  // Add one enemy
+  std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
+  enemy->setPosition(20.0f, 20.0f);
+  m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
 }
 
 sf::FloatRect World::get_view_bounds() const {
   return sf::FloatRect(m_world_view.getCenter() - 
          m_world_view.getSize() / 2.f, m_world_view.getSize());
+}
+
+sf::FloatRect World::get_bounding_rect() const {
+  return sf::FloatRect(0.0f, 0.0f, m_size.x, m_size.y);
+}
+
+void World::remove_outside_entities() {
+  Command command;
+	command.category = Category::AllyBullet | Category::EnemyBullet | 
+                     Category::Enemy;
+	command.action = derived_action<Entity>([this] (Entity& e, sf::Time) {
+		if (!get_bounding_rect().intersects(e.get_bounding_rect()))
+			e.destroy();
+	});
+
+	m_command_queue.push(command);
 }

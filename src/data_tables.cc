@@ -19,7 +19,7 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Enemy].fire_cooldown = sf::seconds(0.5f);
   data[Ship::Enemy].spawn_position = sf::Vector2f(800.0f, 200.0f);
   data[Ship::Enemy].size = sf::Vector2f(20.0f, 20.0f);
-  data[Ship::Enemy].color = sf::Color::White;
+  data[Ship::Enemy].color = sf::Color::Red;
 
   return data;
 }

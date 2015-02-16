@@ -33,6 +33,8 @@ private:
   void load_textures();
   void handle_collisions();
   void build_scene();
+  sf::FloatRect get_bounding_rect() const;
+  void remove_outside_entities();
   sf::FloatRect get_view_bounds() const;
 
   // Layers enum
@@ -50,6 +52,7 @@ private:
   SceneNode m_scene_graph;
   std::array<SceneNode*, LayerCount>  m_scene_layers;
   CommandQueue m_command_queue;
+  sf::Vector2f m_size;
 };
 
 #endif // WORLD_H

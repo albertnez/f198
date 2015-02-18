@@ -20,6 +20,8 @@ public:
   float get_max_speed() const;
   float get_acceleration() const;
   void aim(sf::Vector2f dir);
+  bool is_spawning() const;
+  void unset_spawning();
 
 private:
   void update_current(sf::Time dt, CommandQueue& commands) override;
@@ -34,6 +36,7 @@ private:
   bool m_is_shooting;
   sf::Vector2f m_aim_dir;
   sf::Vector2f m_shoot_dir;
+  bool m_spawning;
 };
 
 #endif // SHIP_H

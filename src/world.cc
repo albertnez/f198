@@ -24,6 +24,9 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
 }
 
 void World::update(sf::Time dt) {
+  // Update spawning status of enemies
+  update_spawn_status(); 
+
   // Remove objects outside of bounds
   remove_outside_entities();
 
@@ -139,11 +142,29 @@ void World::remove_outside_entities() {
 	command.category = Category::AllyBullet | Category::EnemyBullet | 
                      Category::Enemy;
 	command.action = derived_action<Entity>([this] (Entity& e, sf::Time) {
+    // don't remove if it is an enemy spawning
+    Entity* pointer = &e;
+    Ship* enemy = dynamic_cast<Ship*>(pointer);
+    if (enemy && enemy->is_spawning())
+      return;
 		if (!get_bounding_rect().intersects(e.get_bounding_rect()))
 			e.destroy();
 	});
 
 	m_command_queue.push(command);
+}
+
+void World::update_spawn_status() {
+  Command command;
+  command.category = Category::Enemy;
+  command.action = derived_action<Ship>([this] (Ship& enemy, sf::Time) {
+    if (enemy.is_spawning() && 
+        get_bounding_rect().intersects(enemy.get_bounding_rect())) {
+      enemy.unset_spawning();
+    }
+  });
+
+  m_command_queue.push(command);
 }
 
 void World::guide_enemies() {

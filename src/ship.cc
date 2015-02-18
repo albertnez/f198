@@ -18,7 +18,8 @@ Ship::Ship(Type type)
       m_time_since_shot(),
       m_is_shooting(false),
       m_aim_dir(0.0f, 0.0f),
-      m_shoot_dir(0.0f, 0.0f) {
+      m_shoot_dir(0.0f, 0.0f),
+      m_spawning(true) {
   setPosition(Table[m_type].spawn_position);
 
   m_fire_command.action = [this] (SceneNode& scene_node, sf::Time dt) {
@@ -61,6 +62,15 @@ void Ship::aim(sf::Vector2f dir) {
   m_aim_dir += dir;
   m_is_shooting = true;
 }
+
+bool Ship::is_spawning() const {
+  return m_spawning;
+}
+
+void Ship::unset_spawning() {
+  m_spawning = false;
+}
+
 void Ship::update_current(sf::Time dt, CommandQueue& commands) {
   // Update shoot time
   if (m_time_since_shot < Table[m_type].fire_cooldown)

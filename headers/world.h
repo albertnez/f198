@@ -38,6 +38,7 @@ private:
   sf::FloatRect get_view_bounds() const;
   sf::FloatRect get_bounding_rect() const;
   void remove_outside_entities();
+  void update_spawn_status();
   void guide_enemies();
 
   // Layers enum

@@ -1,12 +1,17 @@
 #include "world.h"
 #include "bullet.h"
 #include "utility.h"
+#include "data_tables.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <algorithm>
 #include <cmath>
 #include <limits>
+
+namespace {
+std::vector<LevelData> Table = initialize_level_data();
+}
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
     : m_target(outputTarget),
@@ -17,13 +22,18 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_scene_layers(),
       m_player(nullptr),
       m_command_queue(),
-      m_size(800.0f, 600.0f) {
+      m_size(800.0f, 600.0f),
+      m_level(FirstLevel),
+      m_time_since_spawn() {
 
   load_textures();
   build_scene();
 }
 
 void World::update(sf::Time dt) {
+  // Update new enemies
+  attempt_enemies_spawn(dt);
+
   // Update spawning status of enemies
   update_spawn_status(); 
 
@@ -180,4 +190,17 @@ void World::guide_enemies() {
     enemy.aim(dir);
   });
   m_command_queue.push(guide_command);
+}
+
+void World::attempt_enemies_spawn(sf::Time dt) {
+  m_time_since_spawn += dt;
+  if (m_time_since_spawn > Table[m_level].spawn_cooldown) {
+    m_time_since_spawn -= Table[m_level].spawn_cooldown;
+    // spawn enemies
+    for (unsigned i = 0; i < Table[m_level].num_enemies; ++i) {
+      std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
+      enemy->setPosition(20.0f + 60.0f*i, -20.0f);
+      m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
+    }
+  }
 }

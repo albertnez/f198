@@ -1,6 +1,7 @@
 #include "data_tables.h"
 #include "ship.h"
 #include "bullet.h"
+#include "world.h"
 
 std::vector<ShipData> initialize_ship_data() {
   std::vector<ShipData> data(Ship::TypeCount);
@@ -45,3 +46,11 @@ std::vector<BulletData> initialize_bullet_data() {
   return data;
 }
 
+std::vector<LevelData> initialize_level_data() {
+  std::vector<LevelData> data(World::LevelCount);
+
+  data[World::FirstLevel].spawn_cooldown = sf::seconds(1.0f);
+  data[World::FirstLevel].num_enemies = 5;
+
+  return data;
+}

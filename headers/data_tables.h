@@ -29,7 +29,13 @@ struct BulletData {
   sf::Color color;
 };
 
+struct LevelData {
+  sf::Time spawn_cooldown;
+  unsigned num_enemies;
+};
+
 std::vector<ShipData> initialize_ship_data();
 std::vector<BulletData> initialize_bullet_data();
+std::vector<LevelData> initialize_level_data();
 
 #endif // DATA_TABLES_H

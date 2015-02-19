@@ -24,6 +24,12 @@ class RenderTarget;
 
 class World : private sf::NonCopyable {
 public:
+  enum Level {
+    FirstLevel,
+    SecondLevel,
+    LevelCount,
+  };
+
   explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
   void update(sf::Time dt);
   void draw();
@@ -40,6 +46,7 @@ private:
   void remove_outside_entities();
   void update_spawn_status();
   void guide_enemies();
+  void attempt_enemies_spawn(sf::Time dt);
 
   // Layers enum
   enum Layer {
@@ -58,6 +65,8 @@ private:
   Ship* m_player;
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
+  Level m_level;
+  sf::Time m_time_since_spawn;
 };
 
 #endif // WORLD_H

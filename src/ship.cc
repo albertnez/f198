@@ -52,6 +52,10 @@ int Ship::get_damage() const {
   return Table[m_type].damage;
 }
 
+int Ship::get_score() const {
+  return Table[m_type].score;
+}
+
 float Ship::get_max_speed() const {
   return Table[m_type].speed;
 }

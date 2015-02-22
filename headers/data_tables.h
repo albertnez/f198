@@ -13,6 +13,7 @@
 struct ShipData {
   int hitpoints;
   int damage;
+  int score;
   float speed;
   float acceleration;
   float friction;

@@ -5,6 +5,7 @@
 #include "resource_identifiers.h"
 #include "scene_node.h"
 #include "sprite_node.h"
+#include "text_node.h"
 #include "ship.h"
 #include "command_queue.h"
 #include "command.h"
@@ -58,6 +59,7 @@ private:
   enum Layer {
     ObjectLayer,
     ShipLayer,
+    TextLayer,
     LayerCount,
   };
 
@@ -69,6 +71,7 @@ private:
   SceneNode m_scene_graph;
   std::array<SceneNode*, LayerCount>  m_scene_layers;
   Ship* m_player;
+  TextNode* m_score_text;
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
   unsigned m_level;
@@ -76,6 +79,7 @@ private:
   sf::Time m_time_since_spawn;
   // number of alive enemies, counting spawning ones
   unsigned m_alive_enemies;
+  int m_score;
 };
 
 #endif // WORLD_H

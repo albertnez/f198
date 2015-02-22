@@ -21,18 +21,23 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_scene_graph(),
       m_scene_layers(),
       m_player(nullptr),
+      m_score_text(nullptr),
       m_command_queue(),
       m_size(screen_width, screen_height),
       m_level(FirstLevel),
       m_level_round(0),
       m_time_since_spawn(),
-      m_alive_enemies(0) {
+      m_alive_enemies(0),
+      m_score(0) {
 
   load_textures();
   build_scene();
 }
 
 void World::update(sf::Time dt) {
+  // Update score
+  m_score_text->set_text("Score: " + to_string(m_score));
+
   // Spawn enemies, and update level
   update_level_status(dt);
 
@@ -109,6 +114,7 @@ void World::handle_collisions() {
       ship.damage(bullet.get_damage());
       if (ship.is_destroyed()) {
         --m_alive_enemies;
+        m_score += ship.get_score();
       }
       bullet.destroy();
     }
@@ -132,9 +138,15 @@ void World::build_scene() {
     m_scene_graph.attach_child(std::move(layer));
   }
   // Initialize remaining scene
+  // Add player
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
   m_player = player.get();
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
+  // Add score
+  std::unique_ptr<TextNode> score_text(new TextNode(m_fonts, "Score: 0"));
+  m_score_text = score_text.get();
+  m_score_text->setPosition(50.0f, 20.0f);
+  m_scene_layers[TextLayer]->attach_child(std::move(score_text));
 }
 
 sf::FloatRect World::get_view_bounds() const {

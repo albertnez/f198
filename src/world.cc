@@ -22,8 +22,9 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_scene_layers(),
       m_player(nullptr),
       m_command_queue(),
-      m_size(800.0f, 600.0f),
+      m_size(screen_width, screen_height),
       m_level(FirstLevel),
+      m_level_round(0),
       m_time_since_spawn() {
 
   load_textures();
@@ -129,13 +130,6 @@ void World::build_scene() {
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
   m_player = player.get();
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
-
-  // Add one enemy
-  for (int i = 0; i < 20; ++i) {
-    std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
-    enemy->setPosition(20.0f + 40.0f*i, 20.0f);
-    m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
-  }
 }
 
 sf::FloatRect World::get_view_bounds() const {
@@ -194,13 +188,21 @@ void World::guide_enemies() {
 
 void World::attempt_enemies_spawn(sf::Time dt) {
   m_time_since_spawn += dt;
-  if (m_time_since_spawn > Table[m_level].spawn_cooldown) {
-    m_time_since_spawn -= Table[m_level].spawn_cooldown;
+  while (m_level_round < Table[m_level].rounds.size() &&
+         m_time_since_spawn >= Table[m_level].rounds[m_level_round].wait_time) {
+    
+    // Get round and formations
+    LevelData::Round round = Table[m_level].rounds[m_level_round];
+    const std::vector<sf::Vector2f>& formation = 
+      Table[m_level].formations[round.formation];
     // spawn enemies
-    for (unsigned i = 0; i < Table[m_level].num_enemies; ++i) {
+    for (const sf::Vector2f& position : formation) {
       std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
-      enemy->setPosition(20.0f + 60.0f*i, -20.0f);
+      enemy->setPosition(position);
       m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
     }
+
+    m_time_since_spawn -= round.wait_time;
+    ++m_level_round;
   }
 }

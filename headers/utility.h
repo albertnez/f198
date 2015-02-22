@@ -6,6 +6,8 @@
 
 #include <sstream>
 
+extern int screen_width;
+extern int screen_height;
 
 namespace sf {
   class RectangleShape;

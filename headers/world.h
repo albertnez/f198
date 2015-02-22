@@ -43,9 +43,13 @@ private:
   void build_scene();
   sf::FloatRect get_view_bounds() const;
   sf::FloatRect get_bounding_rect() const;
+  // Remove entities that are out of bounds, but not those that are spawning
   void remove_outside_entities();
+  // If spawning enemies reached the game bounding rect, update status
   void update_spawn_status();
+  // Guides enemies to player
   void guide_enemies();
+  // Attemps to spawn enemies if possible
   void attempt_enemies_spawn(sf::Time dt);
 
   // Layers enum
@@ -66,6 +70,7 @@ private:
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
   Level m_level;
+  unsigned m_level_round;
   sf::Time m_time_since_spawn;
 };
 

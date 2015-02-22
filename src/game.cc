@@ -8,7 +8,7 @@
 const sf::Time Game::time_per_frame = sf::seconds(1.f/60.f);
 
 Game::Game()
-    : m_window(sf::VideoMode(800, 600), "f198", sf::Style::Close),
+    : m_window(sf::VideoMode(screen_width, screen_height), "f198", sf::Style::Close),
       m_textures(),
       m_fonts(),
       m_player(),

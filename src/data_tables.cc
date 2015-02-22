@@ -49,14 +49,20 @@ std::vector<BulletData> initialize_bullet_data() {
 std::vector<LevelData> initialize_level_data() {
   std::vector<LevelData> data(World::LevelCount);
 
+  // LEVEL ONE
   data[World::FirstLevel].formations = {
-      std::vector<sf::Vector2f> {
-          sf::Vector2f(-20.0f, 250.0f),
-          sf::Vector2f(-60.0f, 250.0f),
-          sf::Vector2f(-100.0f, 250.0f),
-          sf::Vector2f(-140.0f, 250.0f),
-          sf::Vector2f(-180.0f, 250.0f),
-      },
+    std::vector<sf::Vector2f> {
+      sf::Vector2f(300.0f, -20.0f),
+      sf::Vector2f(500.0f, -20.0f),
+    },
+  };
+  data[World::FirstLevel].rounds = {
+    LevelData::Round(0, sf::seconds(1.0f)),
+    LevelData::Round(0, sf::seconds(5.0f)),
+  };
+
+  // LEVEL TWO
+  data[World::SecondLevel].formations = {
       std::vector<sf::Vector2f> {
           sf::Vector2f(-20.0f, 250.0f),
           sf::Vector2f(-20.0f, 350.0f),
@@ -65,11 +71,9 @@ std::vector<LevelData> initialize_level_data() {
           sf::Vector2f(400.0f, -20.0f),
       }
   };
-  data[World::FirstLevel].rounds = {
-    LevelData::Round(0, sf::seconds(1.0f)),
-    LevelData::Round(1, sf::seconds(4.0f)),
-    LevelData::Round(0, sf::seconds(4.0f)),
-    LevelData::Round(1, sf::seconds(4.0f)),
+  data[World::SecondLevel].rounds = {
+    LevelData::Round(0, sf::seconds(5.0f)),
+    LevelData::Round(0, sf::seconds(5.0f)),
   };
 
 

@@ -49,8 +49,8 @@ private:
   void update_spawn_status();
   // Guides enemies to player
   void guide_enemies();
-  // Attemps to spawn enemies if possible
-  void attempt_enemies_spawn(sf::Time dt);
+  // Spawns enemies if possible, and updates current level and round
+  void update_level_status(sf::Time dt);
   // Adjust player position so that doesn't go out of bounds
   void adjust_player_position();
 
@@ -71,9 +71,11 @@ private:
   Ship* m_player;
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
-  Level m_level;
+  unsigned m_level;
   unsigned m_level_round;
   sf::Time m_time_since_spawn;
+  // number of alive enemies, counting spawning ones
+  unsigned m_alive_enemies;
 };
 
 #endif // WORLD_H

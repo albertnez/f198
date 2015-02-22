@@ -25,15 +25,16 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_size(screen_width, screen_height),
       m_level(FirstLevel),
       m_level_round(0),
-      m_time_since_spawn() {
+      m_time_since_spawn(),
+      m_alive_enemies(0) {
 
   load_textures();
   build_scene();
 }
 
 void World::update(sf::Time dt) {
-  // Update new enemies
-  attempt_enemies_spawn(dt);
+  // Spawn enemies, and update level
+  update_level_status(dt);
 
   // Update spawning status of enemies
   update_spawn_status(); 
@@ -106,6 +107,9 @@ void World::handle_collisions() {
       auto& bullet = static_cast<Bullet&>(*pair.second);
 
       ship.damage(bullet.get_damage());
+      if (ship.is_destroyed()) {
+        --m_alive_enemies;
+      }
       bullet.destroy();
     }
     else if (matches_categories(pair, Category::Enemy, Category::Player)) {
@@ -147,13 +151,14 @@ void World::remove_outside_entities() {
 	command.category = Category::AllyBullet | Category::EnemyBullet | 
                      Category::Enemy;
 	command.action = derived_action<Entity>([this] (Entity& e, sf::Time) {
-    // don't remove if it is an enemy spawning
+    // don't remove if it is an enemy spawning or already destroyed
     Entity* pointer = &e;
     Ship* enemy = dynamic_cast<Ship*>(pointer);
-    if (enemy && enemy->is_spawning())
-      return;
-		if (!get_bounding_rect().intersects(e.get_bounding_rect()))
+    if (enemy && (enemy->is_spawning() || enemy->is_destroyed())) return;
+		if (!get_bounding_rect().intersects(e.get_bounding_rect())) {
 			e.destroy();
+      if (enemy) --m_alive_enemies;
+    }
 	});
 
 	m_command_queue.push(command);
@@ -187,8 +192,12 @@ void World::guide_enemies() {
   m_command_queue.push(guide_command);
 }
 
-void World::attempt_enemies_spawn(sf::Time dt) {
+void World::update_level_status(sf::Time dt) {
+  // Already finished levels
+  if (m_level >= LevelCount) return;
+
   m_time_since_spawn += dt;
+  // Spawn enemies and update round
   while (m_level_round < Table[m_level].rounds.size() &&
          m_time_since_spawn >= Table[m_level].rounds[m_level_round].wait_time) {
     
@@ -201,10 +210,22 @@ void World::attempt_enemies_spawn(sf::Time dt) {
       std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
       enemy->setPosition(position);
       m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
+      ++m_alive_enemies;
     }
 
     m_time_since_spawn -= round.wait_time;
     ++m_level_round;
+  }
+  // If no more rounds and enemies on this level, advance level
+  if (m_level_round >= Table[m_level].rounds.size() && m_alive_enemies == 0) {
+    ++m_level;
+    // Restart level and time
+    m_level_round = 0;
+    m_time_since_spawn = sf::seconds(0.0f);
+    // If finished last level, end
+    if (m_level >= LevelCount) {
+      // finish
+    }
   }
 }
 

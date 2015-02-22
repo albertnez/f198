@@ -37,6 +37,8 @@ unsigned int Ship::get_category() const {
 }
 
 sf::FloatRect Ship::get_bounding_rect() const {
+  // If destroyed, no collisions
+  if (is_destroyed()) return sf::FloatRect();
   sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
   sf::Vector2f size = Table[m_type].size;
   return get_world_transform().transformRect(sf::FloatRect(pos-size/2.f, size));

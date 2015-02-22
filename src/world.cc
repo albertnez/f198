@@ -56,6 +56,7 @@ void World::update(sf::Time dt) {
 
   // Update scene graph
   m_scene_graph.update(dt, m_command_queue);
+  adjust_player_position();
 }
 
 void World::draw() {
@@ -205,4 +206,18 @@ void World::attempt_enemies_spawn(sf::Time dt) {
     m_time_since_spawn -= round.wait_time;
     ++m_level_round;
   }
+}
+
+void World::adjust_player_position() {
+  if (!is_player_alive()) return;
+
+  sf::FloatRect bounds = m_player->get_bounding_rect();
+  sf::Vector2f pos = m_player->getPosition();
+  // left limit
+  pos.x = std::max(pos.x, bounds.width/2.0f);
+  pos.x = std::min(pos.x, screen_width - bounds.width/2.0f);
+  pos.y = std::max(pos.y, bounds.height/2.0f);
+  pos.y = std::min(pos.y, screen_height - bounds.height/2.0f);
+
+  m_player->setPosition(pos);
 }

@@ -51,6 +51,8 @@ private:
   void guide_enemies();
   // Attemps to spawn enemies if possible
   void attempt_enemies_spawn(sf::Time dt);
+  // Adjust player position so that doesn't go out of bounds
+  void adjust_player_position();
 
   // Layers enum
   enum Layer {

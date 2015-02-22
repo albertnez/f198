@@ -2,6 +2,7 @@
 #include "ship.h"
 #include "bullet.h"
 #include "world.h"
+#include "utility.h"
 
 std::vector<ShipData> initialize_ship_data() {
   std::vector<ShipData> data(Ship::TypeCount);
@@ -51,29 +52,37 @@ std::vector<LevelData> initialize_level_data() {
 
   // LEVEL ONE
   data[World::FirstLevel].formations = {
-    std::vector<sf::Vector2f> {
-      sf::Vector2f(300.0f, -20.0f),
-      sf::Vector2f(500.0f, -20.0f),
-    },
+      {
+          {300.0f, -20.0f},
+          {500.0f, -20.0f},
+      },
   };
   data[World::FirstLevel].rounds = {
-    LevelData::Round(0, sf::seconds(1.0f)),
-    LevelData::Round(0, sf::seconds(5.0f)),
+      {0, sf::seconds(1.0f)},
+      {0, sf::seconds(5.0f)},
   };
 
   // LEVEL TWO
   data[World::SecondLevel].formations = {
-      std::vector<sf::Vector2f> {
-          sf::Vector2f(-20.0f, 250.0f),
-          sf::Vector2f(-20.0f, 350.0f),
-          sf::Vector2f(820.0f, 250.0f),
-          sf::Vector2f(820.0f, 350.0f),
-          sf::Vector2f(400.0f, -20.0f),
-      }
+      {
+          {-20.0f, 250.0f},
+          {-20.0f, 350.0f},
+          {820.0f, 250.0f},
+          {820.0f, 350.0f},
+          {400.0f, -20.0f},
+      },
+      {
+          {-20.0f, -20.0f},
+          {screen_width + 20.0f, -20.0f},
+          {screen_width + 20.0f, screen_height + 20.0f},
+          {-20.0f, screen_height + 20.0f},
+      },
   };
   data[World::SecondLevel].rounds = {
-    LevelData::Round(0, sf::seconds(5.0f)),
-    LevelData::Round(0, sf::seconds(5.0f)),
+      {0, sf::seconds(3.0f)},
+      {1, sf::seconds(5.0f)},
+      {1, sf::seconds(5.0f)},
+      {0, sf::seconds(5.0f)},
   };
 
 

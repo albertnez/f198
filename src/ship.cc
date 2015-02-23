@@ -15,11 +15,14 @@ std::vector<ShipData> Table = initialize_ship_data();
 Ship::Ship(Type type)
     : Entity(Table[type].hitpoints),
       m_type(type),
+      m_shoot_power(SingleBullet),
       m_time_since_shot(),
       m_is_shooting(false),
       m_aim_dir(0.0f, 0.0f),
       m_shoot_dir(0.0f, 0.0f),
       m_spawning(true) {
+  
+  if (type == Player) m_shoot_power = TripleBullet;
   setPosition(Table[m_type].spawn_position);
 
   m_fire_command.action = [this] (SceneNode& scene_node, sf::Time dt) {
@@ -119,10 +122,24 @@ void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
   if (m_type == Enemy) bullet_type = Bullet::Enemy;
 
-  std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
-  // set speed
-  sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();
-  bullet->set_velocity(velocity);
-  bullet->setPosition(get_world_position());
-  scene_node.attach_child(std::move(bullet));
+  unsigned bullets = 1;
+  if (m_shoot_power == DoubleBullet) bullets = 2;
+  else if (m_shoot_power == TripleBullet) bullets = 3;
+  sf::Vector2f offset_dir(-m_shoot_dir.y, m_shoot_dir.x);
+  const float offset = 5.0f;
+  const sf::Vector2f init_pos = get_world_position() - offset_dir*offset*((bullets-1)/2.0f);
+  for (unsigned i = 0; i < bullets; ++i) {
+    std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
+    sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();
+    bullet->set_velocity(velocity);
+    bullet->setPosition(init_pos + offset_dir*offset*float(i));
+    scene_node.attach_child(std::move(bullet));
+  }
+
+  //std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
+  //// set speed
+  //sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();
+  //bullet->set_velocity(velocity);
+  //bullet->setPosition(get_world_position());
+  //scene_node.attach_child(std::move(bullet));
 }

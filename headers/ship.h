@@ -12,6 +12,12 @@ public:
     Enemy,
     TypeCount,
   };
+  enum ShootPower {
+    SingleBullet,
+    DoubleBullet,
+    TripleBullet,
+    ShootPowerCount,
+  };
   explicit Ship(Type type);
   unsigned int get_category() const override;
   sf::FloatRect get_bounding_rect() const override;
@@ -31,6 +37,7 @@ private:
   void create_bullet(SceneNode& scene_node) const;
 
   Type m_type;
+  ShootPower m_shoot_power;
   Command m_fire_command;
   sf::Time m_time_since_shot;
   bool m_is_shooting;

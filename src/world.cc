@@ -111,12 +111,14 @@ void World::handle_collisions() {
       auto& ship = static_cast<Ship&>(*pair.first);
       auto& bullet = static_cast<Bullet&>(*pair.second);
 
-      ship.damage(bullet.get_damage());
-      if (ship.is_destroyed()) {
-        --m_alive_enemies;
-        m_score += ship.get_score();
+      if (!ship.is_destroyed()) {
+        ship.damage(bullet.get_damage());
+        if (ship.is_destroyed()) {
+          --m_alive_enemies;
+          m_score += ship.get_score();
+        }
+        bullet.destroy();
       }
-      bullet.destroy();
     }
     else if (matches_categories(pair, Category::Enemy, Category::Player)) {
       auto& enemy = static_cast<Ship&>(*pair.first);

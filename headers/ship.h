@@ -19,7 +19,6 @@ public:
   int get_damage() const;
   int get_score() const;
   float get_max_speed() const;
-  float get_acceleration() const;
   void aim(sf::Vector2f dir);
   bool is_spawning() const;
   void unset_spawning();

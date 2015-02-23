@@ -9,8 +9,6 @@ std::vector<ShipData> initialize_ship_data() {
 
   data[Ship::Player].hitpoints = 10;
   data[Ship::Player].speed = 600.0f;
-  data[Ship::Player].acceleration = 200.0f;
-  data[Ship::Player].friction = 0.90f;
   data[Ship::Player].fire_cooldown = sf::seconds(0.1f);
   data[Ship::Player].spawn_position = sf::Vector2f(200.0f, 200.0f);
   data[Ship::Player].size = sf::Vector2f(20.0f, 20.0f);

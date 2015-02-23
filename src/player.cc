@@ -10,7 +10,7 @@ struct ShipMover {
   ShipMover(float x, float y) : velocity(x, y) {}
 
   void operator() (Ship& ship, sf::Time dt) const {
-    ship.accelerate(velocity * ship.get_acceleration());
+    ship.accelerate(velocity * ship.get_max_speed());
   }
   sf::Vector2f velocity;
 };

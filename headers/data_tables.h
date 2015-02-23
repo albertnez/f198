@@ -15,8 +15,6 @@ struct ShipData {
   int damage;
   int score;
   float speed;
-  float acceleration;
-  float friction;
   sf::Time fire_cooldown;
   sf::Vector2f spawn_position;
   sf::Vector2f size;

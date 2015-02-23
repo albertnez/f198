@@ -60,10 +60,6 @@ float Ship::get_max_speed() const {
   return Table[m_type].speed;
 }
 
-float Ship::get_acceleration() const {
-  return Table[m_type].acceleration;
-}
-
 void Ship::aim(sf::Vector2f dir) {
   m_aim_dir += dir;
   m_is_shooting = true;
@@ -91,9 +87,11 @@ void Ship::update_current(sf::Time dt, CommandQueue& commands) {
   try_shoot(dt, commands);
 
   Entity::update_current(dt, commands);
-  // Apply friction
-  if (get_category() == Category::Player)
-    set_velocity(get_velocity()*Table[m_type].friction); // As dt is fixed
+
+  // Reset velocity
+  if (get_category() == Category::Player) {
+    set_velocity(sf::Vector2f());
+  }
 }
 
 void Ship::draw_current(sf::RenderTarget& target,

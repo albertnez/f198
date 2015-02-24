@@ -15,8 +15,9 @@ std::vector<ShipData> Table = initialize_ship_data();
 Ship::Ship(Type type)
     : Entity(Table[type].hitpoints),
       m_type(type),
-      m_shoot_power(SingleBullet),
+      m_shoot_power(static_cast<Ship::ShootPower>(Table[type].shoot_power)),
       m_time_since_shot(),
+      m_fire_cooldown(Table[type].fire_cooldown),
       m_is_shooting(false),
       m_aim_dir(0.0f, 0.0f),
       m_shoot_dir(0.0f, 0.0f),
@@ -76,9 +77,15 @@ void Ship::unset_spawning() {
   m_spawning = false;
 }
 
+void Ship::upgrade_bullet(unsigned levels) {
+}
+
+void Ship::upgrade_fire_rate(sf::Time) {
+}
+
 void Ship::update_current(sf::Time dt, CommandQueue& commands) {
   // Update shoot time
-  if (m_time_since_shot < Table[m_type].fire_cooldown)
+  if (m_time_since_shot < m_fire_cooldown)
     m_time_since_shot += dt;
   // Limit speed
   if (length(get_velocity()) > get_max_speed()) {
@@ -107,7 +114,7 @@ void Ship::draw_current(sf::RenderTarget& target,
 }
 
 void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
-  if (m_is_shooting && m_time_since_shot >= Table[m_type].fire_cooldown &&
+  if (m_is_shooting && m_time_since_shot >= m_fire_cooldown &&
       m_aim_dir != sf::Vector2f(0.0f, 0.0f)) {
     m_time_since_shot = sf::seconds(0.0f);
     commands.push(m_fire_command);
@@ -122,7 +129,7 @@ void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
   if (m_type == Enemy) bullet_type = Bullet::Enemy;
 
-  unsigned bullets = 1;
+  unsigned bullets = m_shoot_power;
   if (m_shoot_power == DoubleBullet) bullets = 2;
   else if (m_shoot_power == TripleBullet) bullets = 3;
   sf::Vector2f offset_dir(-m_shoot_dir.y, m_shoot_dir.x);
@@ -135,11 +142,4 @@ void Ship::create_bullet(SceneNode& scene_node) const {
     bullet->setPosition(init_pos + offset_dir*offset*float(i));
     scene_node.attach_child(std::move(bullet));
   }
-
-  //std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
-  //// set speed
-  //sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();
-  //bullet->set_velocity(velocity);
-  //bullet->setPosition(get_world_position());
-  //scene_node.attach_child(std::move(bullet));
 }

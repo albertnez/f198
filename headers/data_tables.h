@@ -8,6 +8,9 @@
 #include <SFML/System/Time.hpp>
 
 #include <vector>
+#include <functional>
+
+class Ship;
 
 // Contains all static initial data of objects
 struct ShipData {
@@ -15,7 +18,14 @@ struct ShipData {
   int damage;
   int score;
   float speed;
+  // Initial fire cooldown
   sf::Time fire_cooldown;
+  // Minimum fire_cooldown inclusive
+  sf::Time min_fire_cooldown;
+  // Initial shoot power
+  unsigned shoot_power;
+  // Maximum shoot power inclusive
+  unsigned max_shoot_power;
   sf::Vector2f spawn_position;
   sf::Vector2f size;
   sf::Color color;
@@ -46,8 +56,13 @@ struct LevelData {
   std::vector<Round> rounds;
 };
 
+struct PowerupData {
+  std::function<void(Ship&)> action;
+};
+
 std::vector<ShipData> initialize_ship_data();
 std::vector<BulletData> initialize_bullet_data();
 std::vector<LevelData> initialize_level_data();
+std::vector<PowerupData> initialize_powerup_data();
 
 #endif // DATA_TABLES_H

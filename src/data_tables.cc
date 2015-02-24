@@ -2,6 +2,7 @@
 #include "ship.h"
 #include "bullet.h"
 #include "world.h"
+#include "powerup.h"
 #include "utility.h"
 
 std::vector<ShipData> initialize_ship_data() {
@@ -10,6 +11,9 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Player].hitpoints = 10;
   data[Ship::Player].speed = 600.0f;
   data[Ship::Player].fire_cooldown = sf::seconds(0.1f);
+  data[Ship::Player].min_fire_cooldown = sf::seconds(0.1f);
+  data[Ship::Player].shoot_power = Ship::SingleBullet;
+  data[Ship::Player].max_shoot_power = Ship::TripleBullet;
   data[Ship::Player].spawn_position = sf::Vector2f(200.0f, 200.0f);
   data[Ship::Player].size = sf::Vector2f(20.0f, 20.0f);
   data[Ship::Player].color = sf::Color::White;
@@ -86,4 +90,18 @@ std::vector<LevelData> initialize_level_data() {
 
 
   return data;
+}
+
+std::vector<PowerupData> initialize_powerup_data() {
+  std::vector<PowerupData> data(Powerup::TypeCount);
+  
+  data[Powerup::Heal].action = [] (Ship& ship) { ship.heal(5); };
+
+  data[Powerup::Bullet].action = std::bind(&Ship::upgrade_bullet, 
+                                           std::placeholders::_1,
+                                           1);
+
+  data[Powerup::FireRate].action = std::bind(&Ship::upgrade_fire_rate, 
+                                             std::placeholders::_1,
+                                             sf::seconds(0.2f));
 }

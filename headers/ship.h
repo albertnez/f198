@@ -13,6 +13,7 @@ public:
     TypeCount,
   };
   enum ShootPower {
+    ZeroBullet,
     SingleBullet,
     DoubleBullet,
     TripleBullet,
@@ -28,6 +29,8 @@ public:
   void aim(sf::Vector2f dir);
   bool is_spawning() const;
   void unset_spawning();
+  void upgrade_bullet(unsigned levels);
+  void upgrade_fire_rate(sf::Time dif);
 
 private:
   void update_current(sf::Time dt, CommandQueue& commands) override;
@@ -40,6 +43,7 @@ private:
   ShootPower m_shoot_power;
   Command m_fire_command;
   sf::Time m_time_since_shot;
+  sf::Time m_fire_cooldown;
   bool m_is_shooting;
   sf::Vector2f m_aim_dir;
   sf::Vector2f m_shoot_dir;

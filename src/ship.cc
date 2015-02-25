@@ -23,7 +23,6 @@ Ship::Ship(Type type)
       m_shoot_dir(0.0f, 0.0f),
       m_spawning(true) {
   
-  if (type == Player) m_shoot_power = TripleBullet;
   setPosition(Table[m_type].spawn_position);
 
   m_fire_command.action = [this] (SceneNode& scene_node, sf::Time dt) {
@@ -78,9 +77,14 @@ void Ship::unset_spawning() {
 }
 
 void Ship::upgrade_bullet(unsigned levels) {
+  m_shoot_power = static_cast<ShootPower>(
+      std::min(m_shoot_power + levels,
+               static_cast<unsigned>(Table[m_type].max_shoot_power)));
 }
 
-void Ship::upgrade_fire_rate(sf::Time) {
+void Ship::upgrade_fire_rate(sf::Time dif) {
+  m_fire_cooldown = std::max(m_fire_cooldown - dif,
+                             Table[m_type].min_fire_cooldown);
 }
 
 void Ship::update_current(sf::Time dt, CommandQueue& commands) {
@@ -129,12 +133,11 @@ void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
   if (m_type == Enemy) bullet_type = Bullet::Enemy;
 
-  unsigned bullets = m_shoot_power;
-  if (m_shoot_power == DoubleBullet) bullets = 2;
-  else if (m_shoot_power == TripleBullet) bullets = 3;
+  unsigned bullets = static_cast<unsigned>(m_shoot_power);
   sf::Vector2f offset_dir(-m_shoot_dir.y, m_shoot_dir.x);
   const float offset = 5.0f;
-  const sf::Vector2f init_pos = get_world_position() - offset_dir*offset*((bullets-1)/2.0f);
+  const sf::Vector2f init_pos = get_world_position() - 
+                                offset_dir*offset*((bullets-1)/2.0f);
   for (unsigned i = 0; i < bullets; ++i) {
     std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
     sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();

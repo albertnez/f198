@@ -46,6 +46,8 @@ private:
   sf::FloatRect get_bounding_rect() const;
   // Remove entities that are out of bounds, but not those that are spawning
   void remove_outside_entities();
+  // Update texts from UI
+  void update_texts();
   // If spawning enemies reached the game bounding rect, update status
   void update_spawn_status();
   // Guides enemies to player
@@ -76,6 +78,7 @@ private:
   std::array<SceneNode*, LayerCount>  m_scene_layers;
   Ship* m_player;
   TextNode* m_score_text;
+  TextNode* m_lives_text;
   CommandQueue m_command_queue;
   sf::Vector2f m_size;
   unsigned m_level;

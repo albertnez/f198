@@ -13,7 +13,8 @@ class TextNode : public SceneNode {
 public:
   explicit TextNode(const FontHolder& font, 
                     const std::string& text, 
-                    unsigned size = 20);
+                    unsigned size = 20,
+                    bool centered = false);
 
   virtual void draw_current(sf::RenderTarget& target, 
                             sf::RenderStates states) const override;
@@ -22,6 +23,7 @@ public:
 
 private:
   sf::Text m_text;
+  bool m_centered;
 };
 
 #endif // TEXT_NODE_H

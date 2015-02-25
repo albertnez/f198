@@ -23,6 +23,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_scene_layers(),
       m_player(nullptr),
       m_score_text(nullptr),
+      m_lives_text(nullptr),
       m_command_queue(),
       m_size(screen_width, screen_height),
       m_level(FirstLevel),
@@ -36,8 +37,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
 }
 
 void World::update(sf::Time dt) {
-  // Update score
-  m_score_text->set_text("Score: " + to_string(m_score));
+  // Update texts
+  update_texts();
 
   // Spawn enemies, and update level
   update_level_status(dt);
@@ -162,8 +163,16 @@ void World::build_scene() {
   // Add score
   std::unique_ptr<TextNode> score_text(new TextNode(m_fonts, "Score: 0"));
   m_score_text = score_text.get();
-  m_score_text->setPosition(50.0f, 20.0f);
+  m_score_text->setPosition(50.0f, 5.0f);
   m_scene_layers[TextLayer]->attach_child(std::move(score_text));
+  // Add lives
+  std::string lives("");
+  for (int i = 0; i < m_player->get_hitpoints(); ++i)
+    lives += " |";
+  std::unique_ptr<TextNode> lives_text(new TextNode(m_fonts, "Lives: " + lives));
+  m_lives_text = lives_text.get();
+  m_lives_text->setPosition(250.0f, 5.0f);
+  m_scene_layers[TextLayer]->attach_child(std::move(lives_text));
 }
 
 sf::FloatRect World::get_view_bounds() const {
@@ -191,6 +200,16 @@ void World::remove_outside_entities() {
 	});
 
 	m_command_queue.push(command);
+}
+
+void World::update_texts() {
+  // Update life
+  std::string lives("");
+  for (int i = 0; i < m_player->get_hitpoints(); ++i)
+    lives += " |";
+  m_lives_text->set_text("Lives: " + lives);
+  // Update score
+  m_score_text->set_text("Score: " + to_string(m_score));
 }
 
 void World::update_spawn_status() {

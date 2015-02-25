@@ -20,7 +20,7 @@ std::vector<ShipData> initialize_ship_data() {
 
   // CHASER
   data[Ship::Chaser].hitpoints = 2;
-  data[Ship::Chaser].damage = 100.0f;
+  data[Ship::Chaser].damage = 4;
   data[Ship::Chaser].score = 10;
   data[Ship::Chaser].speed = 80.0f;
   data[Ship::Chaser].fire_cooldown = sf::seconds(2.0f);
@@ -30,7 +30,7 @@ std::vector<ShipData> initialize_ship_data() {
 
   // LINEAR
   data[Ship::Linear].hitpoints = 2;
-  data[Ship::Linear].damage = 100.0f;
+  data[Ship::Linear].damage = 4;
   data[Ship::Linear].score = 10;
   data[Ship::Linear].speed = 160.0f;
   data[Ship::Linear].fire_cooldown = sf::seconds(2.0f);
@@ -73,10 +73,18 @@ std::vector<LevelData> initialize_level_data() {
           {300.0f, -20.0f},
           {500.0f, -20.0f},
       },
+      {
+          {-20.0f, screen_height/2.0f},
+          {screen_width/2.0f, screen_height+20.0f},
+      },
   };
   data[World::FirstLevel].rounds = {
       {0, Ship::Chaser, sf::seconds(1.0f)},
-      {0, Ship::Linear, sf::seconds(5.0f)},
+
+      {0, Ship::Chaser, sf::seconds(5.0f)},
+
+      {0, Ship::Chaser, sf::seconds(5.0f)},
+      {1, Ship::Linear, sf::seconds(0.0f)},
   };
   data[World::FirstLevel].powerup_prob = 100;
 
@@ -89,16 +97,26 @@ std::vector<LevelData> initialize_level_data() {
           {820.0f, 350.0f},
           {400.0f, -20.0f},
       },
-      {
+      { // From Diagonals
           {-20.0f, -20.0f},
           {screen_width + 20.0f, -20.0f},
           {screen_width + 20.0f, screen_height + 20.0f},
           {-20.0f, screen_height + 20.0f},
       },
+      { // From sides
+          {screen_width/2.0f, -20.0f},
+          {screen_width/2.0f, screen_height + 20.0f},
+          {-20.0f, screen_height/2.0f},
+          {screen_width + 20.0f, screen_height/2.0f},
+      }
   };
   data[World::SecondLevel].rounds = {
       {0, Ship::Chaser, sf::seconds(3.0f)},
+      {1, Ship::Linear, sf::seconds(0.0f)},
+
       {1, Ship::Chaser, sf::seconds(5.0f)},
+      {2, Ship::Linear, sf::seconds(1.0f)},
+
       {1, Ship::Chaser, sf::seconds(5.0f)},
       {0, Ship::Chaser, sf::seconds(5.0f)},
   };

@@ -6,9 +6,11 @@
 
 TextNode::TextNode(const FontHolder& fonts, 
                    const std::string& text, 
-                   unsigned size)
-    : m_text(text, fonts.get(Fonts::Main), size) {
-  center_origin(m_text);
+                   unsigned size,
+                   bool centered)
+    : m_text(text, fonts.get(Fonts::Main), size), m_centered(centered) {
+  if (centered)
+    center_origin(m_text);
 }  
 
 
@@ -19,5 +21,6 @@ void TextNode::draw_current(sf::RenderTarget& target,
 
 void TextNode::set_text(const std::string& text) {
   m_text.setString(text);
-  center_origin(m_text);
+  if (m_centered)
+    center_origin(m_text);
 }

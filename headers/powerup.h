@@ -14,6 +14,8 @@ public:
     TypeCount,
   };
   explicit Powerup(Type type);
+  unsigned int get_category() const override;
+  sf::FloatRect get_bounding_rect() const override;
 
   void apply(Ship& ship);
 

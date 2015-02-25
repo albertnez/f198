@@ -16,6 +16,16 @@ Powerup::Powerup(Type type)
       m_type(type) {
 }
 
+unsigned int Powerup::get_category() const {
+  return Category::Powerup;
+}
+
+sf::FloatRect Powerup::get_bounding_rect() const {
+  sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
+  sf::Vector2f size = Table[m_type].size;
+  return get_world_transform().transformRect(sf::FloatRect(pos-size/2.f, size));
+}
+
 void Powerup::apply(Ship& ship) {
   Table[m_type].action(ship);
 }

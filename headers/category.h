@@ -12,6 +12,7 @@ enum Type {
   ObjectLayer = 1 << 2,
   AllyBullet = 1 << 3,
   EnemyBullet = 1 << 4,
+  Powerup = 1 << 5,
 };
 
 }

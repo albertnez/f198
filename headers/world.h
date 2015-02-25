@@ -50,8 +50,10 @@ private:
   void update_spawn_status();
   // Guides enemies to player
   void guide_enemies();
-  // Spawns enemies if possible, and updates current level and round
+  // Updates current level and round, calls spawn enemy if required
   void update_level_status(sf::Time dt);
+  // Spawns an enemy at position
+  void spawn_enemy(Ship::Type type, sf::Vector2f pos);
   // Adjust player position so that doesn't go out of bounds
   void adjust_player_position();
   // Spawns a random powerup at position

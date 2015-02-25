@@ -8,24 +8,38 @@
 std::vector<ShipData> initialize_ship_data() {
   std::vector<ShipData> data(Ship::TypeCount);
 
+  // PLAYER
   data[Ship::Player].hitpoints = 10;
   data[Ship::Player].speed = 600.0f;
   data[Ship::Player].fire_cooldown = sf::seconds(1.0f);
   data[Ship::Player].min_fire_cooldown = sf::seconds(0.1f);
   data[Ship::Player].shoot_power = Ship::SingleBullet;
   data[Ship::Player].max_shoot_power = Ship::QuintBullet;
-  data[Ship::Player].spawn_position = sf::Vector2f(200.0f, 200.0f);
   data[Ship::Player].size = sf::Vector2f(20.0f, 20.0f);
   data[Ship::Player].color = sf::Color::White;
 
-  data[Ship::Enemy].hitpoints = 2;
-  data[Ship::Enemy].damage = 100.0f;
-  data[Ship::Enemy].score = 10;
-  data[Ship::Enemy].speed = 80.0f;
-  data[Ship::Enemy].fire_cooldown = sf::seconds(2.0f);
-  data[Ship::Enemy].spawn_position = sf::Vector2f(800.0f, 200.0f);
-  data[Ship::Enemy].size = sf::Vector2f(20.0f, 20.0f);
-  data[Ship::Enemy].color = sf::Color::Red;
+  // CHASER
+  data[Ship::Chaser].hitpoints = 2;
+  data[Ship::Chaser].damage = 100.0f;
+  data[Ship::Chaser].score = 10;
+  data[Ship::Chaser].speed = 80.0f;
+  data[Ship::Chaser].fire_cooldown = sf::seconds(2.0f);
+  data[Ship::Chaser].shoot_power = Ship::SingleBullet;
+  data[Ship::Chaser].size = sf::Vector2f(20.0f, 20.0f);
+  data[Ship::Chaser].color = sf::Color::Red;
+
+  // LINEAR
+  data[Ship::Linear].hitpoints = 2;
+  data[Ship::Linear].damage = 100.0f;
+  data[Ship::Linear].score = 10;
+  data[Ship::Linear].speed = 160.0f;
+  data[Ship::Linear].fire_cooldown = sf::seconds(2.0f);
+  data[Ship::Linear].shoot_power = Ship::SingleBullet;
+  data[Ship::Linear].size = sf::Vector2f(20.0f, 20.0f);
+  data[Ship::Linear].color = sf::Color::Red;
+  
+
+  // STATIC
 
   return data;
 }
@@ -61,8 +75,8 @@ std::vector<LevelData> initialize_level_data() {
       },
   };
   data[World::FirstLevel].rounds = {
-      {0, sf::seconds(1.0f)},
-      {0, sf::seconds(5.0f)},
+      {0, Ship::Chaser, sf::seconds(1.0f)},
+      {0, Ship::Linear, sf::seconds(5.0f)},
   };
   data[World::FirstLevel].powerup_prob = 100;
 
@@ -83,10 +97,10 @@ std::vector<LevelData> initialize_level_data() {
       },
   };
   data[World::SecondLevel].rounds = {
-      {0, sf::seconds(3.0f)},
-      {1, sf::seconds(5.0f)},
-      {1, sf::seconds(5.0f)},
-      {0, sf::seconds(5.0f)},
+      {0, Ship::Chaser, sf::seconds(3.0f)},
+      {1, Ship::Chaser, sf::seconds(5.0f)},
+      {1, Ship::Chaser, sf::seconds(5.0f)},
+      {0, Ship::Chaser, sf::seconds(5.0f)},
   };
   data[World::SecondLevel].powerup_prob = 30;
 

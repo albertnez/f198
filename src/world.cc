@@ -157,6 +157,7 @@ void World::build_scene() {
   // Add player
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
   m_player = player.get();
+  m_player->setPosition(screen_width/2, screen_height/2);
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
   // Add score
   std::unique_ptr<TextNode> score_text(new TextNode(m_fonts, "Score: 0"));
@@ -212,9 +213,12 @@ void World::guide_enemies() {
 
     sf::Vector2f dir = unit_vector(m_player->get_world_position() - 
                                    enemy.get_world_position());
-    sf::Vector2f velocity = dir * enemy.get_max_speed();
-
-    enemy.set_velocity(velocity);
+    // Only change direction if it is a chaser
+    if (enemy.get_category() & Category::Chaser) {
+      sf::Vector2f velocity = dir * enemy.get_max_speed();
+      enemy.set_velocity(velocity);
+    }
+    // Always aim
     enemy.aim(dir);
   });
   m_command_queue.push(guide_command);
@@ -235,10 +239,7 @@ void World::update_level_status(sf::Time dt) {
       Table[m_level].formations[round.formation];
     // spawn enemies
     for (const sf::Vector2f& position : formation) {
-      std::unique_ptr<Ship> enemy(new Ship(Ship::Enemy));
-      enemy->setPosition(position);
-      m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
-      ++m_alive_enemies;
+      spawn_enemy(static_cast<Ship::Type>(round.enemy_type), position);
     }
 
     m_time_since_spawn -= round.wait_time;
@@ -255,6 +256,19 @@ void World::update_level_status(sf::Time dt) {
       // finish
     }
   }
+}
+
+void World::spawn_enemy(Ship::Type type, sf::Vector2f pos) {
+  std::unique_ptr<Ship> enemy(new Ship(type));
+  enemy->setPosition(pos);
+  // set direction
+  sf::Vector2f dir = unit_vector(m_player->get_world_position() - pos);
+  sf::Vector2f velocity = dir * enemy->get_max_speed();
+  enemy->set_velocity(velocity);
+
+  m_scene_layers[ShipLayer]->attach_child(std::move(enemy));
+
+  ++m_alive_enemies;
 }
 
 void World::adjust_player_position() {

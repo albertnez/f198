@@ -9,7 +9,9 @@ class Ship : public Entity {
 public:
   enum Type {
     Player,
-    Enemy,
+    Chaser, // Follows the player
+    Linear, // Doesn't change direction
+    Static, // Is static
     TypeCount,
   };
   enum ShootPower {

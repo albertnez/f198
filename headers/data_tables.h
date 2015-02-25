@@ -43,13 +43,15 @@ struct LevelData {
   // Formations consisting of positions of enemies in that formation
   std::vector<std::vector<sf::Vector2f>> formations;
 
-  // Consists of an index of the formation, and waiting time from last round
+  // Consists of an index of the formation, enemy type of the formation, 
+  // and waiting time from last round
   struct Round {
     unsigned formation;
+    unsigned enemy_type;
     sf::Time wait_time;
-    Round() : formation(0), wait_time() {}
-    Round(unsigned formation, sf::Time wait_time)
-        : formation(formation), wait_time(wait_time) {
+    Round() : formation(0), enemy_type(0), wait_time() {}
+    Round(unsigned formation, unsigned enemy_type, sf::Time wait_time)
+        : formation(formation), enemy_type(enemy_type), wait_time(wait_time) {
     }
   };
   // All rounds that from current level

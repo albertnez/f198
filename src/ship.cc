@@ -32,10 +32,13 @@ Ship::Ship(Type type)
 } 
 
 unsigned int Ship::get_category() const {
+  unsigned int category = Category::None;
   switch (m_type) {
     case Player: return Category::Player;
-    case Enemy: return Category::Enemy;
-    default: return Category::None;
+    case Chaser: category |= Category::Chaser;
+    case Linear:
+    case Static: category |= Category::Enemy;
+    default: return category;
   }
 }
 
@@ -48,7 +51,7 @@ sf::FloatRect Ship::get_bounding_rect() const {
 }
 
 bool Ship::is_marked_for_removal() const {
-  return (m_type == Enemy && is_destroyed());
+  return (get_category() & Category::Enemy && is_destroyed());
 }
 
 int Ship::get_damage() const {
@@ -131,7 +134,7 @@ void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
 
 void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
-  if (m_type == Enemy) bullet_type = Bullet::Enemy;
+  if (get_category() & Category::Enemy) bullet_type = Bullet::Enemy;
 
   unsigned bullets = static_cast<unsigned>(m_shoot_power);
   sf::Vector2f offset_dir(-m_shoot_dir.y, m_shoot_dir.x);

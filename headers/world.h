@@ -54,6 +54,8 @@ private:
   void update_level_status(sf::Time dt);
   // Adjust player position so that doesn't go out of bounds
   void adjust_player_position();
+  // Spawns a random powerup at position
+  void spawn_powerup(sf::Vector2f pos);
 
   // Layers enum
   enum Layer {

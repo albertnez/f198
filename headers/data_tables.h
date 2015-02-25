@@ -54,9 +54,13 @@ struct LevelData {
   };
   // All rounds that from current level
   std::vector<Round> rounds;
+  // Probability of spawning powerup in percentage
+  int powerup_prob;
 };
 
 struct PowerupData {
+  sf::Vector2f size;
+  sf::Color color;
   std::function<void(Ship&)> action;
 };
 

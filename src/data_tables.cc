@@ -64,6 +64,7 @@ std::vector<LevelData> initialize_level_data() {
       {0, sf::seconds(1.0f)},
       {0, sf::seconds(5.0f)},
   };
+  data[World::FirstLevel].powerup_prob = 100;
 
   // LEVEL TWO
   data[World::SecondLevel].formations = {
@@ -87,6 +88,7 @@ std::vector<LevelData> initialize_level_data() {
       {1, sf::seconds(5.0f)},
       {0, sf::seconds(5.0f)},
   };
+  data[World::SecondLevel].powerup_prob = 30;
 
 
   return data;
@@ -95,13 +97,23 @@ std::vector<LevelData> initialize_level_data() {
 std::vector<PowerupData> initialize_powerup_data() {
   std::vector<PowerupData> data(Powerup::TypeCount);
   
+  sf::Vector2f size(15.0f, 15.0f);
+
+  data[Powerup::Heal].size = size;
+  data[Powerup::Heal].color = sf::Color::Green;
   data[Powerup::Heal].action = [] (Ship& ship) { ship.heal(5); };
 
+  data[Powerup::Bullet].size = size;
+  data[Powerup::Bullet].color = sf::Color::Blue;
   data[Powerup::Bullet].action = std::bind(&Ship::upgrade_bullet, 
                                            std::placeholders::_1,
                                            1);
 
+  data[Powerup::FireRate].size = size;
+  data[Powerup::FireRate].color = sf::Color::Yellow;
   data[Powerup::FireRate].action = std::bind(&Ship::upgrade_fire_rate, 
                                              std::placeholders::_1,
                                              sf::seconds(0.2f));
+
+  return data;
 }

@@ -1,5 +1,6 @@
 #include "world.h"
 #include "bullet.h"
+#include "powerup.h"
 #include "utility.h"
 #include "data_tables.h"
 
@@ -113,9 +114,14 @@ void World::handle_collisions() {
 
       if (!ship.is_destroyed()) {
         ship.damage(bullet.get_damage());
-        if (ship.is_destroyed()) {
+        if ((ship.get_category() & Category::Enemy) && ship.is_destroyed()) {
           --m_alive_enemies;
           m_score += ship.get_score();
+          // spawn powerup at random
+          int rand = random_int(100);
+          if (rand <= Table[m_level].powerup_prob) {
+            spawn_powerup(ship.getPosition());
+          }
         }
         bullet.destroy();
       }
@@ -255,4 +261,12 @@ void World::adjust_player_position() {
   pos.y = std::min(pos.y, screen_height - bounds.height/2.0f);
 
   m_player->setPosition(pos);
+}
+
+void World::spawn_powerup(sf::Vector2f pos) {
+  Powerup::Type which = static_cast<Powerup::Type>(
+      random_int(static_cast<int>(Powerup::TypeCount)));
+  std::unique_ptr<Powerup> powerup(new Powerup(which));
+  powerup->setPosition(pos);
+  m_scene_layers[ObjectLayer]->attach_child(std::move(powerup));
 }

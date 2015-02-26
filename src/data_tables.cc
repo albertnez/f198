@@ -169,7 +169,7 @@ std::vector<LevelData> initialize_level_data() {
       {1, Ship::Chaser, sf::seconds(2.0f)},
       {2, Ship::Linear, sf::seconds(0.0f)},
   };
-  data[World::Level2].powerup_prob = 20;
+  data[World::Level3].powerup_prob = 20;
 
   return data;
 }

@@ -10,7 +10,7 @@ std::vector<ShipData> initialize_ship_data() {
 
   // PLAYER
   data[Ship::Player].hitpoints = 10;
-  data[Ship::Player].speed = 600.0f;
+  data[Ship::Player].speed = 400.0f;
   data[Ship::Player].fire_cooldown = sf::seconds(0.2f);
   data[Ship::Player].min_fire_cooldown = sf::seconds(0.05);
   data[Ship::Player].shoot_power = Ship::SingleBullet;
@@ -22,7 +22,7 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Chaser].hitpoints = 2;
   data[Ship::Chaser].damage = 4;
   data[Ship::Chaser].score = 10;
-  data[Ship::Chaser].speed = 80.0f;
+  data[Ship::Chaser].speed = 140.0f;
   data[Ship::Chaser].fire_cooldown = sf::seconds(2.0f);
   data[Ship::Chaser].shoot_power = Ship::SingleBullet;
   data[Ship::Chaser].size = sf::Vector2f(20.0f, 20.0f);
@@ -68,7 +68,7 @@ std::vector<LevelData> initialize_level_data() {
   std::vector<LevelData> data(World::LevelCount);
 
   // LEVEL ONE
-  data[World::FirstLevel].formations = {
+  data[World::Level1].formations = {
       {
           {300.0f, -20.0f},
           {500.0f, -20.0f},
@@ -78,7 +78,7 @@ std::vector<LevelData> initialize_level_data() {
           {screen_width/2.0f, screen_height+20.0f},
       },
   };
-  data[World::FirstLevel].rounds = {
+  data[World::Level1].rounds = {
       {0, Ship::Chaser, sf::seconds(1.0f)},
 
       {0, Ship::Chaser, sf::seconds(5.0f)},
@@ -86,10 +86,10 @@ std::vector<LevelData> initialize_level_data() {
       {0, Ship::Chaser, sf::seconds(5.0f)},
       {1, Ship::Linear, sf::seconds(0.0f)},
   };
-  data[World::FirstLevel].powerup_prob = 100;
+  data[World::Level1].powerup_prob = 100;
 
   // LEVEL TWO
-  data[World::SecondLevel].formations = {
+  data[World::Level2].formations = {
       {
           {-20.0f, 250.0f},
           {-20.0f, 350.0f},
@@ -110,7 +110,7 @@ std::vector<LevelData> initialize_level_data() {
           {screen_width + 20.0f, screen_height/2.0f},
       }
   };
-  data[World::SecondLevel].rounds = {
+  data[World::Level2].rounds = {
       {0, Ship::Chaser, sf::seconds(3.0f)},
       {1, Ship::Linear, sf::seconds(0.0f)},
 
@@ -120,8 +120,56 @@ std::vector<LevelData> initialize_level_data() {
       {1, Ship::Chaser, sf::seconds(5.0f)},
       {0, Ship::Chaser, sf::seconds(5.0f)},
   };
-  data[World::SecondLevel].powerup_prob = 30;
+  data[World::Level2].powerup_prob = 30;
 
+  // LEVEL THREE
+  data[World::Level3].formations = {
+      { // Left side
+          {-20.0f, 1.0f*screen_height/5.0f},
+          {-20.0f, 2.0f*screen_height/5.0f},
+          {-20.0f, 3.0f*screen_height/5.0f},
+          {-20.0f, 4.0f*screen_height/5.0f},
+      },
+      { // Right side
+          {screen_width + 20.0f, 1.0f*screen_height/5.0f},
+          {screen_width + 20.0f, 2.0f*screen_height/5.0f},
+          {screen_width + 20.0f, 3.0f*screen_height/5.0f},
+          {screen_width + 20.0f, 4.0f*screen_height/5.0f},
+      },
+      { // Top
+          {1.0f*screen_width/7.0f, -20.0f},
+          {2.0f*screen_width/7.0f, -20.0f},
+          {3.0f*screen_width/7.0f, -20.0f},
+          {4.0f*screen_width/7.0f, -20.0f},
+          {5.0f*screen_width/7.0f, -20.0f},
+          {6.0f*screen_width/7.0f, -20.0f},
+      },
+  };
+  data[World::Level3].rounds = {
+      {0, Ship::Chaser, sf::seconds(3.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+
+      {0, Ship::Chaser, sf::seconds(2.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+      {2, Ship::Linear, sf::seconds(0.0f)},
+
+      {0, Ship::Chaser, sf::seconds(2.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+
+      {0, Ship::Chaser, sf::seconds(2.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+      {2, Ship::Linear, sf::seconds(0.0f)},
+
+      {0, Ship::Chaser, sf::seconds(2.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+      {2, Ship::Linear, sf::seconds(0.0f)},
+
+
+      {0, Ship::Chaser, sf::seconds(2.0f)},
+      {1, Ship::Chaser, sf::seconds(2.0f)},
+      {2, Ship::Linear, sf::seconds(0.0f)},
+  };
+  data[World::Level2].powerup_prob = 20;
 
   return data;
 }

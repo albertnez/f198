@@ -26,7 +26,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_lives_text(nullptr),
       m_command_queue(),
       m_size(screen_width, screen_height),
-      m_level(FirstLevel),
+      m_level(Level1),
       m_level_round(0),
       m_time_since_spawn(),
       m_alive_enemies(0),

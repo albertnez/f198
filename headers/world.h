@@ -26,8 +26,9 @@ class RenderTarget;
 class World : private sf::NonCopyable {
 public:
   enum Level {
-    FirstLevel,
-    SecondLevel,
+    Level1,
+    Level2,
+    Level3,
     LevelCount,
   };
 

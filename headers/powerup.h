@@ -15,6 +15,8 @@ public:
   };
   explicit Powerup(Type type);
   unsigned int get_category() const override;
+  void check_scene_collision(SceneNode& scene_graph,
+                             std::set<Pair>& collision_pairs) override;
   sf::FloatRect get_bounding_rect() const override;
 
   void apply(Ship& ship);

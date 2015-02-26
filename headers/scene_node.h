@@ -37,7 +37,7 @@ public:
   void on_command(const Command& command, sf::Time dt);
   virtual unsigned int get_category() const;
 
-  void check_scene_collision(SceneNode& scene_graph, std::set<Pair>& collision_pairs);
+  virtual void check_scene_collision(SceneNode& scene_graph, std::set<Pair>& collision_pairs);
   void check_node_collision(SceneNode& node, std::set<Pair>& collision_pairs);
   void remove_wrecks();
   virtual sf::FloatRect get_bounding_rect() const;

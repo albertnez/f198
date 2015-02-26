@@ -20,6 +20,10 @@ unsigned int Powerup::get_category() const {
   return Category::Powerup;
 }
 
+void Powerup::check_scene_collision(SceneNode& /*scene_graph*/,
+                                    std::set<Pair>& /*collision_pairs*/) {
+}
+
 sf::FloatRect Powerup::get_bounding_rect() const {
   sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
   sf::Vector2f size = Table[m_type].size;

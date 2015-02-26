@@ -24,6 +24,11 @@ unsigned int Bullet::get_category() const {
   }
 }
 
+void Bullet::check_scene_collision(SceneNode& /*scene_graph*/, 
+                                   std::set<Pair>& /*collision_pairs*/) {
+  // Don't check against all scene, neither its children
+}
+
 sf::FloatRect Bullet::get_bounding_rect() const {
   sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f);
   sf::Vector2f size = Table[m_type].size;

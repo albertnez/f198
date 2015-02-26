@@ -12,6 +12,9 @@ public:
   };
   Bullet(Type type);
   unsigned int get_category() const override;
+  // Override, bullets wont check against all scene
+  void check_scene_collision(SceneNode& scene_graph, 
+                             std::set<Pair>& collision_pairs) override;
   sf::FloatRect get_bounding_rect() const override;
   int get_damage() const;
   float get_max_speed() const;

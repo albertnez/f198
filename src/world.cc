@@ -131,8 +131,11 @@ void World::handle_collisions() {
       auto& enemy = static_cast<Ship&>(*pair.first);
       auto& player = static_cast<Ship&>(*pair.second);
 
-      player.damage(enemy.get_damage());
-      enemy.destroy();
+      if (!enemy.is_destroyed()) {
+        player.damage(enemy.get_damage());
+        enemy.destroy();
+        --m_alive_enemies;
+      }
     }
     // Collision of powerup and player
     else if (matches_categories(pair, Category::Player, Category::Powerup)) {

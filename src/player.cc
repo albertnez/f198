@@ -18,7 +18,7 @@ struct ShipMover {
 Player::Player() 
     : m_key_binding(),
       m_joystick_id(0),
-      m_axis_threshold(10.0f),
+      m_axis_threshold(2.0f),
       m_button_binding(),
       m_axis_binding(),
       m_action_binding(),

@@ -9,7 +9,7 @@
 struct ShipMover {
   ShipMover(float x, float y) : velocity(x, y) {}
 
-  void operator() (Ship& ship, sf::Time) const {
+  void operator() (Ship& ship, sf::Time /*dt*/) const {
     ship.accelerate(velocity * ship.get_max_speed());
   }
   sf::Vector2f velocity;
@@ -159,7 +159,7 @@ void Player::initialize_actions() {
       derived_action<Ship>(ShipMover(0.0f, 1.0f));
 
   m_action_binding[MoveXJoystick].action =
-      derived_action<Ship>([this] (Ship& ship, sf::Time) {
+      derived_action<Ship>([this] (Ship& ship, sf::Time /*dt*/) {
         float pos = sf::Joystick::getAxisPosition(
             m_joystick_id, 
             get_assigned_axis(MoveXJoystick));
@@ -169,7 +169,7 @@ void Player::initialize_actions() {
       });;
 
   m_action_binding[MoveYJoystick].action =
-      derived_action<Ship>([this] (Ship& ship, sf::Time) {
+      derived_action<Ship>([this] (Ship& ship, sf::Time /*dt*/) {
         float pos = sf::Joystick::getAxisPosition(
             m_joystick_id, 
             get_assigned_axis(MoveYJoystick));
@@ -179,7 +179,7 @@ void Player::initialize_actions() {
       });;
 
   m_action_binding[FireXJoystick].action =
-      derived_action<Ship>([this] (Ship& ship, sf::Time) {
+      derived_action<Ship>([this] (Ship& ship, sf::Time /*dt*/) {
         float pos = sf::Joystick::getAxisPosition(
             m_joystick_id, 
             get_assigned_axis(FireXJoystick));
@@ -188,7 +188,7 @@ void Player::initialize_actions() {
       });;
 
   m_action_binding[FireYJoystick].action =
-      derived_action<Ship>([this] (Ship& ship, sf::Time) {
+      derived_action<Ship>([this] (Ship& ship, sf::Time /*dt*/) {
         float pos = sf::Joystick::getAxisPosition(
             m_joystick_id, 
             get_assigned_axis(FireYJoystick));
@@ -197,19 +197,19 @@ void Player::initialize_actions() {
       });;
 
   m_action_binding[FireLeft].action = 
-      derived_action<Ship>([] (Ship& ship, sf::Time) {
+      derived_action<Ship>([] (Ship& ship, sf::Time /*dt*/) {
         ship.aim(sf::Vector2f(-1.0f, 0.0f));
       });
   m_action_binding[FireRight].action = 
-      derived_action<Ship>([] (Ship& ship, sf::Time) {
+      derived_action<Ship>([] (Ship& ship, sf::Time /*dt*/) {
         ship.aim(sf::Vector2f(1.0f, 0.0f));
       });
   m_action_binding[FireDown].action = 
-      derived_action<Ship>([] (Ship& ship, sf::Time) {
+      derived_action<Ship>([] (Ship& ship, sf::Time /*dt*/) {
         ship.aim(sf::Vector2f(0.0f, 1.0f));
       });
   m_action_binding[FireUp].action = 
-      derived_action<Ship>([] (Ship& ship, sf::Time) {
+      derived_action<Ship>([] (Ship& ship, sf::Time /*dt*/) {
         ship.aim(sf::Vector2f(0.0f, -1.0f));
       });
 }

@@ -25,7 +25,7 @@ Ship::Ship(Type type)
   
   setPosition(Table[m_type].spawn_position);
 
-  m_fire_command.action = [this] (SceneNode& scene_node, sf::Time dt) {
+  m_fire_command.action = [this] (SceneNode& scene_node, sf::Time /*dt*/) {
     create_bullet(scene_node);
   };
   m_fire_command.category = Category::ObjectLayer;

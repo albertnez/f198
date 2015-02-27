@@ -13,8 +13,8 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Player].speed = 400.0f;
   data[Ship::Player].fire_cooldown = sf::seconds(0.2f);
   data[Ship::Player].min_fire_cooldown = sf::seconds(0.05);
-  data[Ship::Player].shoot_power = Ship::SingleBullet;
-  data[Ship::Player].max_shoot_power = Ship::QuintBullet;
+  data[Ship::Player].shoot_power = Ship::TwoThreeBullet;
+  data[Ship::Player].max_shoot_power = Ship::TwoThreeBullet;
   data[Ship::Player].size = sf::Vector2f(20.0f, 20.0f);
   data[Ship::Player].color = sf::Color::White;
 

@@ -19,8 +19,8 @@ public:
     SingleBullet,
     DoubleBullet,
     TripleBullet,
-    QuadBullet,
-    QuintBullet,
+    TwoTwoBullet, // Two in lateral, two in middle
+    TwoThreeBullet, // Two in lateral, three in middle
     ShootPowerCount,
   };
   explicit Ship(Type type);

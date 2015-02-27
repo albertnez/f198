@@ -132,7 +132,6 @@ void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
   m_is_shooting = false;
 }
 
-#include <iostream>
 void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
   if (get_category() & Category::Enemy) bullet_type = Bullet::Enemy;

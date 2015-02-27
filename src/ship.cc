@@ -132,6 +132,7 @@ void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
   m_is_shooting = false;
 }
 
+#include <iostream>
 void Ship::create_bullet(SceneNode& scene_node) const {
   Bullet::Type bullet_type = Bullet::Ally;
   if (get_category() & Category::Enemy) bullet_type = Bullet::Enemy;
@@ -145,15 +146,14 @@ void Ship::create_bullet(SceneNode& scene_node) const {
   for (unsigned i = 0; i < bullets; ++i) {
     std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
     sf::Vector2f act_dir(m_shoot_dir);
-    if (i == 0 && 
-       (bullet_type == TwoTwoBullet || bullet_type == TwoThreeBullet)) {
-      // mutiplication matrix
-      // (x * cos - y sin)
-      // (x * sin - y cos)
-      const float angle = 15 * (std::atan(1)/45.0f);
-      act_dir = sf::Vector2f(
-          m_shoot_dir.x * std::cos(angle) - m_shoot_dir.y * std::sin(angle),
-          m_shoot_dir.x * std::sin(angle) - m_shoot_dir.y * std::cos(angle));
+
+    if (m_shoot_power == TwoTwoBullet || m_shoot_power == TwoThreeBullet) {
+      if (i == 0 || i == bullets-1) {
+        const float angle = (i ? 1 : -1) * 10.0f * (std::atan(1)/45.0f);
+        act_dir = sf::Vector2f(
+            m_shoot_dir.x * std::cos(angle) - m_shoot_dir.y * std::sin(angle),
+            m_shoot_dir.x * std::sin(angle) + m_shoot_dir.y * std::cos(angle));
+      }
     }
     sf::Vector2f velocity = unit_vector(act_dir)*bullet->get_max_speed();
     bullet->set_velocity(velocity);

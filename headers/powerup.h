@@ -24,7 +24,7 @@ public:
 private:
   void draw_current(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
-  // ADD DRAW
+  
   Type m_type;
 
 };

@@ -141,9 +141,21 @@ void Ship::create_bullet(SceneNode& scene_node) const {
   const float offset = 5.0f;
   const sf::Vector2f init_pos = get_world_position() - 
                                 offset_dir*offset*((bullets-1)/2.0f);
+  
   for (unsigned i = 0; i < bullets; ++i) {
     std::unique_ptr<Bullet> bullet(new Bullet(bullet_type));
-    sf::Vector2f velocity = unit_vector(m_shoot_dir)*bullet->get_max_speed();
+    sf::Vector2f act_dir(m_shoot_dir);
+    if (i == 0 && 
+       (bullet_type == TwoTwoBullet || bullet_type == TwoThreeBullet)) {
+      // mutiplication matrix
+      // (x * cos - y sin)
+      // (x * sin - y cos)
+      const float angle = 15 * (std::atan(1)/45.0f);
+      act_dir = sf::Vector2f(
+          m_shoot_dir.x * std::cos(angle) - m_shoot_dir.y * std::sin(angle),
+          m_shoot_dir.x * std::sin(angle) - m_shoot_dir.y * std::cos(angle));
+    }
+    sf::Vector2f velocity = unit_vector(act_dir)*bullet->get_max_speed();
     bullet->set_velocity(velocity);
     bullet->setPosition(init_pos + offset_dir*offset*float(i));
     scene_node.attach_child(std::move(bullet));

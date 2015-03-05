@@ -14,6 +14,7 @@ enum Type {
   EnemyBullet = 1 << 4,
   Powerup = 1 << 5,
   Chaser = 1 << 6, // Follows the player
+  ParticleSystem = 1 << 7,
 };
 
 }

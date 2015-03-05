@@ -4,6 +4,7 @@
 #include "world.h"
 #include "powerup.h"
 #include "utility.h"
+#include "particle.h"
 
 std::vector<ShipData> initialize_ship_data() {
   std::vector<ShipData> data(Ship::TypeCount);
@@ -200,3 +201,16 @@ std::vector<PowerupData> initialize_powerup_data() {
 
   return data;
 }
+
+std::vector<ParticleData> initialize_particle_data() {
+  std::vector<ParticleData> data(Particle::TypeCount);
+
+  data[Particle::Explosion].color = sf::Color::Yellow;
+  data[Particle::Explosion].lifetime = sf::seconds(0.5f);
+
+  data[Particle::Trail].color = sf::Color::White;
+  data[Particle::Trail].lifetime = sf::seconds(0.3f);
+
+  return data;
+}
+

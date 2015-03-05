@@ -3,6 +3,8 @@
 #include "powerup.h"
 #include "utility.h"
 #include "data_tables.h"
+#include "particle_node.h"
+#include "emitter_node.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -81,7 +83,7 @@ CommandQueue& World::get_command_queue() {
 }
 
 void World::load_textures() {
-  //m_textures.load(Textures::ID, "path/to/file.png");
+  m_textures.load(Textures::Particle, "res/textures/particle.png");
 }
 
 bool matches_categories(SceneNode::Pair& colliders, 
@@ -176,6 +178,15 @@ void World::build_scene() {
   m_lives_text = lives_text.get();
   m_lives_text->setPosition(250.0f, 5.0f);
   m_scene_layers[TextLayer]->attach_child(std::move(lives_text));
+  
+  // Add particle system
+  std::unique_ptr<ParticleNode> trail_particles(
+      new ParticleNode(Particle::Trail, m_textures));
+  m_scene_layers[ObjectLayer]->attach_child(std::move(trail_particles));
+
+  // Add emitter to the player
+  std::unique_ptr<EmitterNode> trail(new EmitterNode(Particle::Trail));
+  m_player->attach_child(std::move(trail));
 }
 
 sf::FloatRect World::get_view_bounds() const {

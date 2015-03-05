@@ -68,9 +68,15 @@ struct PowerupData {
   std::function<void(Ship&)> action;
 };
 
+struct ParticleData {
+  sf::Color color;
+  sf::Time lifetime;
+};
+
 std::vector<ShipData> initialize_ship_data();
 std::vector<BulletData> initialize_bullet_data();
 std::vector<LevelData> initialize_level_data();
 std::vector<PowerupData> initialize_powerup_data();
+std::vector<ParticleData> initialize_particle_data();
 
 #endif // DATA_TABLES_H

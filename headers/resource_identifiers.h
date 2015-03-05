@@ -12,6 +12,7 @@ class Shader;
 // ID of textures
 namespace Textures {
 enum ID {
+  Particle,
 };
 }
 

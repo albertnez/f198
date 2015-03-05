@@ -58,6 +58,8 @@ struct LevelData {
   std::vector<Round> rounds;
   // Probability of spawning powerup in percentage
   int powerup_prob;
+  // Indicates if the level is infinite
+  bool is_cyclic;
 };
 
 struct PowerupData {

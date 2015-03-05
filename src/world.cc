@@ -269,7 +269,10 @@ void World::update_level_status(sf::Time dt) {
   }
   // If no more rounds and enemies on this level, advance level
   if (m_level_round >= Table[m_level].rounds.size() && m_alive_enemies == 0) {
-    ++m_level;
+    // If level is not cyclic, go to next
+    if (!Table[m_level].is_cyclic) {
+      ++m_level;
+    }
     // Restart level and time
     m_level_round = 0;
     m_time_since_spawn = sf::seconds(0.0f);

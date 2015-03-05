@@ -87,6 +87,7 @@ std::vector<LevelData> initialize_level_data() {
       {1, Ship::Linear, sf::seconds(0.0f)},
   };
   data[World::Level1].powerup_prob = 100;
+  data[World::Level1].is_cyclic = false;
 
   // LEVEL TWO
   data[World::Level2].formations = {
@@ -121,6 +122,7 @@ std::vector<LevelData> initialize_level_data() {
       {0, Ship::Chaser, sf::seconds(5.0f)},
   };
   data[World::Level2].powerup_prob = 30;
+  data[World::Level2].is_cyclic = false;
 
   // LEVEL THREE
   data[World::Level3].formations = {
@@ -170,6 +172,7 @@ std::vector<LevelData> initialize_level_data() {
       {2, Ship::Linear, sf::seconds(0.0f)},
   };
   data[World::Level3].powerup_prob = 20;
+  data[World::Level3].is_cyclic = true;
 
   return data;
 }

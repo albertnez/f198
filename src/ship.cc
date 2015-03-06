@@ -2,6 +2,7 @@
 #include "data_tables.h"
 #include "utility.h"
 #include "bullet.h"
+#include "particle_node.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -21,7 +22,8 @@ Ship::Ship(Type type)
       m_is_shooting(false),
       m_aim_dir(0.0f, 0.0f),
       m_shoot_dir(0.0f, 0.0f),
-      m_spawning(true) {
+      m_spawning(true),
+      m_particle_system(nullptr) {
   
   setPosition(Table[m_type].spawn_position);
 
@@ -91,6 +93,18 @@ void Ship::upgrade_fire_rate(sf::Time dif) {
 }
 
 void Ship::update_current(sf::Time dt, CommandQueue& commands) {
+  // Assign a particle emitter if it does not have any yet
+  if (m_particle_system == nullptr) {
+    auto finder = [this] (ParticleNode& container, sf::Time /*dt*/) {
+      if (container.get_particle_type() == Particle::Explosion)
+        m_particle_system = &container;
+    };
+		Command command;
+		command.category = Category::ParticleSystem;
+		command.action = derived_action<ParticleNode>(finder);
+		commands.push(command);
+  }
+
   // Update shoot time
   if (m_time_since_shot < m_fire_cooldown)
     m_time_since_shot += dt;
@@ -111,6 +125,20 @@ void Ship::update_current(sf::Time dt, CommandQueue& commands) {
   }
 }
 
+void Ship::on_destroy() {
+  // Spawn all particles
+  const int num_particles = 40;
+  const float pi = atan(1)*4.0;
+  const float step = (2.0f*pi)/num_particles;
+  sf::Vector2f position = get_world_position();
+  if (m_particle_system) {
+    for (float angle = 0.0f; angle < (2.0f*pi); angle += step) {
+      sf::Vector2f dir(std::sin(angle), std::cos(angle));
+      m_particle_system->add_particle(position, dir);
+    }
+  }
+}
+
 void Ship::draw_current(sf::RenderTarget& target,
                               sf::RenderStates states) const {
   sf::RectangleShape rectangle(Table[m_type].size);
@@ -120,7 +148,7 @@ void Ship::draw_current(sf::RenderTarget& target,
   target.draw(rectangle, states);
 }
 
-void Ship::try_shoot(sf::Time dt, CommandQueue& commands) {
+void Ship::try_shoot(sf::Time /*dt*/, CommandQueue& commands) {
   if (m_is_shooting && m_time_since_shot >= m_fire_cooldown &&
       m_aim_dir != sf::Vector2f(0.0f, 0.0f)) {
     m_time_since_shot = sf::seconds(0.0f);

@@ -160,16 +160,31 @@ void World::build_scene() {
     m_scene_graph.attach_child(std::move(layer));
   }
   // Initialize remaining scene
+  // Add particle systems
+  std::unique_ptr<ParticleNode> trail_particles(
+      new ParticleNode(Particle::Trail, m_textures));
+  m_scene_layers[ObjectLayer]->attach_child(std::move(trail_particles));
+
+  std::unique_ptr<ParticleNode> explosion_particles(
+      new ParticleNode(Particle::Explosion, m_textures));
+  m_scene_layers[ObjectLayer]->attach_child(std::move(explosion_particles));
+
   // Add player
 	std::unique_ptr<Ship> player(new Ship(Ship::Player));
   m_player = player.get();
   m_player->setPosition(screen_width/2, screen_height/2);
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
+
+  // Add emitter to the player
+  std::unique_ptr<EmitterNode> trail(new EmitterNode(Particle::Trail));
+  m_player->attach_child(std::move(trail));
+
   // Add score
   std::unique_ptr<TextNode> score_text(new TextNode(m_fonts, "Score: 0"));
   m_score_text = score_text.get();
   m_score_text->setPosition(50.0f, 5.0f);
   m_scene_layers[TextLayer]->attach_child(std::move(score_text));
+
   // Add lives
   std::string lives("");
   for (int i = 0; i < m_player->get_hitpoints(); ++i)
@@ -179,14 +194,6 @@ void World::build_scene() {
   m_lives_text->setPosition(250.0f, 5.0f);
   m_scene_layers[TextLayer]->attach_child(std::move(lives_text));
   
-  // Add particle system
-  std::unique_ptr<ParticleNode> trail_particles(
-      new ParticleNode(Particle::Trail, m_textures));
-  m_scene_layers[ObjectLayer]->attach_child(std::move(trail_particles));
-
-  // Add emitter to the player
-  std::unique_ptr<EmitterNode> trail(new EmitterNode(Particle::Trail));
-  m_player->attach_child(std::move(trail));
 }
 
 sf::FloatRect World::get_view_bounds() const {

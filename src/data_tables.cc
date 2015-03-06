@@ -205,11 +205,13 @@ std::vector<PowerupData> initialize_powerup_data() {
 std::vector<ParticleData> initialize_particle_data() {
   std::vector<ParticleData> data(Particle::TypeCount);
 
-  data[Particle::Explosion].color = sf::Color::Yellow;
+  data[Particle::Explosion].color = sf::Color::Red;
   data[Particle::Explosion].lifetime = sf::seconds(0.5f);
+  data[Particle::Explosion].speed = 300.0f;
 
   data[Particle::Trail].color = sf::Color::White;
   data[Particle::Trail].lifetime = sf::seconds(0.3f);
+  data[Particle::Trail].speed = 0.0f;
 
   return data;
 }

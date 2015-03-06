@@ -40,12 +40,14 @@ void Entity::heal(int points) {
 
 void Entity::damage(int points) {
   assert(points > 0);
-
   m_hitpoints -= points;
+  if (m_hitpoints <= 0)
+    on_destroy();
 }
 
 void Entity::destroy() {
   m_hitpoints = 0;
+  on_destroy();
 }
 
 void Entity::remove() {
@@ -58,4 +60,8 @@ bool Entity::is_destroyed() const {
 
 void Entity::update_current(sf::Time dt, CommandQueue&) {  
   move(m_velocity * dt.asSeconds());
+}
+
+void Entity::on_destroy() {
+  // Do not do anything by default
 }

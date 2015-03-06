@@ -24,6 +24,7 @@ public:
 
 protected:
   virtual void update_current(sf::Time dt, CommandQueue& commands) override;
+  virtual void on_destroy();
 
 
 private:

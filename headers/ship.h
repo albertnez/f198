@@ -5,6 +5,9 @@
 #include "command.h"
 #include "command_queue.h"
 
+// Forward declaration of ParticleNode
+class ParticleNode;
+
 class Ship : public Entity {
 public:
   enum Type {
@@ -38,6 +41,7 @@ public:
 
 private:
   void update_current(sf::Time dt, CommandQueue& commands) override;
+  void on_destroy() override;
   void draw_current(sf::RenderTarget& target, 
                     sf::RenderStates states) const override;
   void try_shoot(sf::Time dt, CommandQueue& commands);
@@ -52,6 +56,7 @@ private:
   sf::Vector2f m_aim_dir;
   sf::Vector2f m_shoot_dir;
   bool m_spawning;
+  ParticleNode* m_particle_system;
 };
 
 #endif // SHIP_H

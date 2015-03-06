@@ -1,13 +1,16 @@
 #include "particle.h"
 
-Particle::Particle(sf::Vector2f position, sf::Color color, sf::Time lifetime)
+Particle::Particle(sf::Vector2f position, sf::Color color, sf::Time lifetime,
+                   sf::Vector2f speed)
     : position(position),
       color(color),
-      lifetime(lifetime) {
+      lifetime(lifetime),
+      speed(speed) {
 }
 
 void Particle::update(sf::Time dt) {
   lifetime -= dt;
+  position += speed * dt.asSeconds();
 }
 
 sf::Vector2f Particle::get_position() const {

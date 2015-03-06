@@ -15,6 +15,7 @@ public:
   explicit ParticleNode(Particle::Type m_type, const TextureHolder& textures);
 
   void add_particle(sf::Vector2f position);
+  void add_particle(sf::Vector2f position, sf::Vector2f dir);
   Particle::Type get_particle_type() const;
   unsigned int get_category() const override;
 

@@ -71,6 +71,7 @@ struct PowerupData {
 struct ParticleData {
   sf::Color color;
   sf::Time lifetime;
+  float speed;
 };
 
 std::vector<ShipData> initialize_ship_data();

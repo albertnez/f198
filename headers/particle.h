@@ -12,7 +12,8 @@ public:
     Trail,
     TypeCount,
   };
-  Particle(sf::Vector2f position, sf::Color color, sf::Time lifetime);
+  Particle(sf::Vector2f position, sf::Color color, sf::Time lifetime, 
+           sf::Vector2f speed = sf::Vector2f(0, 0));
   void update(sf::Time dt);
 
   sf::Vector2f get_position() const;
@@ -23,6 +24,7 @@ private:
   sf::Vector2f position;
   sf::Color color;
   sf::Time lifetime;
+  sf::Vector2f speed;
 };
 
 #endif // PARTICLE_H

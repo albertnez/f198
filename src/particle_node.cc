@@ -26,6 +26,14 @@ void ParticleNode::add_particle(sf::Vector2f position) {
 	m_particles.push_back(particle);
 }
 
+void ParticleNode::add_particle(sf::Vector2f position, sf::Vector2f dir) {
+	Particle particle(position, 
+                    Table[m_type].color, 
+                    Table[m_type].lifetime,
+                    dir * Table[m_type].speed);
+	m_particles.push_back(particle);
+}
+
 Particle::Type ParticleNode::get_particle_type() const {
 	return m_type;
 }

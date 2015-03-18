@@ -4,6 +4,10 @@
 #include "entity.h"
 #include "command.h"
 #include "command_queue.h"
+#include "resource_holder.h"
+#include "resource_identifiers.h"
+
+#include <SFML/Graphics/Shader.hpp>
 
 // Forward declaration of ParticleNode
 class ParticleNode;
@@ -26,7 +30,8 @@ public:
     TwoThreeBullet, // Two in lateral, three in middle
     ShootPowerCount,
   };
-  explicit Ship(Type type);
+
+explicit Ship(Type type, const ShaderHolder& shaders);
   unsigned int get_category() const override;
   sf::FloatRect get_bounding_rect() const override;
   bool is_marked_for_removal() const override;
@@ -57,6 +62,7 @@ private:
   sf::Vector2f m_shoot_dir;
   bool m_spawning;
   ParticleNode* m_particle_system;
+  const sf::Shader& m_shader;
 };
 
 #endif // SHIP_H

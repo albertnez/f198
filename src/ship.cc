@@ -13,7 +13,7 @@ namespace {
 std::vector<ShipData> Table = initialize_ship_data();
 }
 
-Ship::Ship(Type type)
+Ship::Ship(Type type, const ShaderHolder& shaders)
     : Entity(Table[type].hitpoints),
       m_type(type),
       m_shoot_power(static_cast<Ship::ShootPower>(Table[type].shoot_power)),
@@ -23,7 +23,8 @@ Ship::Ship(Type type)
       m_aim_dir(0.0f, 0.0f),
       m_shoot_dir(0.0f, 0.0f),
       m_spawning(true),
-      m_particle_system(nullptr) {
+      m_particle_system(nullptr),
+      m_shader(shaders.get(Shaders::Ship)) {
   
   setPosition(Table[m_type].spawn_position);
 
@@ -145,7 +146,22 @@ void Ship::draw_current(sf::RenderTarget& target,
   rectangle.setFillColor(Table[m_type].color);
   center_origin(rectangle);
 
-  target.draw(rectangle, states);
+  sf::VertexArray quad(sf::Quads, 4);
+
+  const sf::Vector2f half = Table[m_type].size * 0.5f;
+  quad[0].position = sf::Vector2f(-half.x, -half.y);
+  quad[1].position = sf::Vector2f(half.x, -half.y);
+  quad[2].position = sf::Vector2f(half.x, half.y);
+  quad[3].position = sf::Vector2f(-half.x, half.y);
+
+  quad[0].texCoords = sf::Vector2f(0.0f, 0.0f);
+  quad[1].texCoords = sf::Vector2f(1.0f, 0.0f);
+  quad[2].texCoords = sf::Vector2f(1.0f, 1.0f);
+  quad[3].texCoords = sf::Vector2f(0.0f, 1.0f);
+
+  states.shader = &m_shader;
+
+  target.draw(quad, states);
 }
 
 void Ship::try_shoot(sf::Time /*dt*/, CommandQueue& commands) {

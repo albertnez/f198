@@ -13,6 +13,7 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Shader.hpp>
 
 #include <array>
 #include <queue>
@@ -41,6 +42,7 @@ public:
 
 private:
   void load_textures();
+  void load_shaders();
   void handle_collisions();
   void build_scene();
   sf::FloatRect get_view_bounds() const;
@@ -49,6 +51,8 @@ private:
   void remove_outside_entities();
   // Update texts from UI
   void update_texts();
+  // Update parameters of shader;
+  void update_shaders();
   // If spawning enemies reached the game bounding rect, update status
   void update_spawn_status();
   // Guides enemies to player
@@ -74,6 +78,8 @@ private:
   sf::View m_world_view;
   TextureHolder m_textures;
   FontHolder& m_fonts;
+  ShaderHolder m_shaders;
+  sf::Time m_elapsed_time;
 
   SceneNode m_scene_graph;
   std::array<SceneNode*, LayerCount>  m_scene_layers;

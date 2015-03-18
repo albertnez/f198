@@ -7,6 +7,8 @@
 #include "emitter_node.h"
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Shader.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -21,6 +23,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_world_view(outputTarget.getDefaultView()),
       m_textures(),
       m_fonts(fonts),
+      m_shaders(),
+      m_elapsed_time(),
       m_scene_graph(),
       m_scene_layers(),
       m_player(nullptr),
@@ -35,12 +39,19 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts)
       m_score(0) {
 
   load_textures();
+  load_shaders();
   build_scene();
 }
 
 void World::update(sf::Time dt) {
   // Update texts
   update_texts();
+
+  // Updated elapsed time
+  m_elapsed_time += dt;
+  
+  // Update shaders
+  update_shaders();
 
   // Spawn enemies, and update level
   update_level_status(dt);
@@ -71,6 +82,22 @@ void World::update(sf::Time dt) {
 
 void World::draw() {
   m_target.setView(m_world_view);
+  
+  // Draw the background
+  sf::VertexArray quad(sf::Quads, 4);
+  quad[0].position = sf::Vector2f(0.0f, 0.0f);
+  quad[1].position = sf::Vector2f(screen_width, 0.0f);
+  quad[2].position = sf::Vector2f(screen_width, screen_height);
+  quad[3].position = sf::Vector2f(0.0f, screen_height);
+
+  //float mx = std::max(screen_width, screen_height);
+  quad[0].texCoords = sf::Vector2f(0.0f, 0.0f);
+  quad[1].texCoords = sf::Vector2f(1.0f, 0.0f);
+  quad[2].texCoords = sf::Vector2f(1.0f, 1.0f);
+  quad[3].texCoords = sf::Vector2f(0.0f, 1.0f);
+  m_target.draw(quad, &m_shaders.get(Shaders::Background));
+
+  // Draw scene graph
   m_target.draw(m_scene_graph);
 }
 
@@ -84,6 +111,15 @@ CommandQueue& World::get_command_queue() {
 
 void World::load_textures() {
   m_textures.load(Textures::Particle, "res/textures/particle.png");
+}
+
+void World::load_shaders() {
+  m_shaders.load(Shaders::Background, 
+                 "res/shaders/background.vert",
+                 "res/shaders/background.frag");
+  m_shaders.load(Shaders::Ship,
+                 "res/shaders/ship.vert",
+                 "res/shaders/ship.frag");
 }
 
 bool matches_categories(SceneNode::Pair& colliders, 
@@ -170,7 +206,7 @@ void World::build_scene() {
   m_scene_layers[ObjectLayer]->attach_child(std::move(explosion_particles));
 
   // Add player
-	std::unique_ptr<Ship> player(new Ship(Ship::Player));
+	std::unique_ptr<Ship> player(new Ship(Ship::Player, m_shaders));
   m_player = player.get();
   m_player->setPosition(screen_width/2, screen_height/2);
   m_scene_layers[ShipLayer]->attach_child(std::move(player));
@@ -231,6 +267,18 @@ void World::update_texts() {
   m_lives_text->set_text("Lives: " + lives);
   // Update score
   m_score_text->set_text("Score: " + to_string(m_score));
+}
+
+void World::update_shaders() {
+  sf::Vector2f player_pos = m_player->get_world_position();
+  player_pos.y = screen_height - player_pos.y;
+  //player_pos.x /= screen_width;
+  //player_pos.y /= screen_height;
+
+  float time = m_elapsed_time.asSeconds();
+  m_shaders.get(Shaders::Background).setParameter("time", time);
+  m_shaders.get(Shaders::Background).setParameter("player_pos", player_pos);
+  m_shaders.get(Shaders::Ship).setParameter("time", time);
 }
 
 void World::update_spawn_status() {
@@ -302,7 +350,7 @@ void World::update_level_status(sf::Time dt) {
 }
 
 void World::spawn_enemy(Ship::Type type, sf::Vector2f pos) {
-  std::unique_ptr<Ship> enemy(new Ship(type));
+  std::unique_ptr<Ship> enemy(new Ship(type, m_shaders));
   enemy->setPosition(pos);
   // set direction
   sf::Vector2f dir = unit_vector(m_player->get_world_position() - pos);

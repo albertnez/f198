@@ -27,7 +27,8 @@ enum ID {
 namespace Shaders {
 enum ID {
   Background,
-  Ship,
+  Player,
+  Enemy,
 };
 }
 

@@ -33,6 +33,7 @@ void main() {
 
   float m = 1.5+sin(pow(0.5-l,2.0)*20.0+time*4.0)*0.5;
   
-  gl_FragColor = vec4(b + (0.5-l)*m);
+  float c = (0.5-l)*m;
+  gl_FragColor = vec4(b+c, b, b, b+c);
 }
 

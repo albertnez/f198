@@ -17,6 +17,7 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Player].shoot_power = Ship::SingleBullet;
   data[Ship::Player].max_shoot_power = Ship::TwoThreeBullet;
   data[Ship::Player].size = sf::Vector2f(20.0f, 20.0f);
+  data[Ship::Player].shader = Shaders::Player;
   data[Ship::Player].color = sf::Color::White;
 
   // CHASER
@@ -27,6 +28,7 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Chaser].fire_cooldown = sf::seconds(2.0f);
   data[Ship::Chaser].shoot_power = Ship::SingleBullet;
   data[Ship::Chaser].size = sf::Vector2f(20.0f, 20.0f);
+  data[Ship::Chaser].shader = Shaders::Enemy;
   data[Ship::Chaser].color = sf::Color::Red;
 
   // LINEAR
@@ -37,6 +39,7 @@ std::vector<ShipData> initialize_ship_data() {
   data[Ship::Linear].fire_cooldown = sf::seconds(2.0f);
   data[Ship::Linear].shoot_power = Ship::SingleBullet;
   data[Ship::Linear].size = sf::Vector2f(20.0f, 20.0f);
+  data[Ship::Linear].shader = Shaders::Enemy;
   data[Ship::Linear].color = sf::Color::Red;
   
 

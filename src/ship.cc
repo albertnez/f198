@@ -24,7 +24,7 @@ Ship::Ship(Type type, const ShaderHolder& shaders)
       m_shoot_dir(0.0f, 0.0f),
       m_spawning(true),
       m_particle_system(nullptr),
-      m_shader(shaders.get(Shaders::Ship)) {
+      m_shader(shaders.get(Table[type].shader)) {
   
   setPosition(Table[m_type].spawn_position);
 

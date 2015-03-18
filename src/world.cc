@@ -117,9 +117,12 @@ void World::load_shaders() {
   m_shaders.load(Shaders::Background, 
                  "res/shaders/background.vert",
                  "res/shaders/background.frag");
-  m_shaders.load(Shaders::Ship,
-                 "res/shaders/ship.vert",
-                 "res/shaders/ship.frag");
+  m_shaders.load(Shaders::Player,
+                 "res/shaders/player.vert",
+                 "res/shaders/player.frag");
+  m_shaders.load(Shaders::Enemy,
+                 "res/shaders/enemy.vert",
+                 "res/shaders/enemy.frag");
 }
 
 bool matches_categories(SceneNode::Pair& colliders, 
@@ -278,7 +281,8 @@ void World::update_shaders() {
   float time = m_elapsed_time.asSeconds();
   m_shaders.get(Shaders::Background).setParameter("time", time);
   m_shaders.get(Shaders::Background).setParameter("player_pos", player_pos);
-  m_shaders.get(Shaders::Ship).setParameter("time", time);
+  m_shaders.get(Shaders::Player).setParameter("time", time);
+  m_shaders.get(Shaders::Enemy).setParameter("time", time);
 }
 
 void World::update_spawn_status() {

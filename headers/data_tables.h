@@ -28,6 +28,7 @@ struct ShipData {
   unsigned max_shoot_power;
   sf::Vector2f spawn_position;
   sf::Vector2f size;
+  Shaders::ID shader;
   sf::Color color;
 };
 

@@ -16,11 +16,12 @@ void main() {
 
   float dy = abs(player_pos.y - y);
 
-  //float g = clamp(10.0/(dx*dy), 0.0, 1.0);
   float g = 0.0f;
   
-  float dist_factor = clamp(50/d, 0.3, 50);
-  float b = clamp((sin(x/20.0) * sin(y/20.0))*dist_factor, 0.0, 1.0);
+  float kd = 50.0;
+  float k_num_points = 7.00;
+  float dist_factor = clamp(kd/d, 0.2, kd);
+  float b = clamp((sin(x/k_num_points) * sin(y/k_num_points))*dist_factor, 0.0, 1.0);
   b *= 1.0 + (abs(sin(time*kt)));
   gl_FragColor = vec4(0.3*r, 0.3*r,0.3*r + b, 1);
 }
